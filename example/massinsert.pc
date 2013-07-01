@@ -1,0 +1,198 @@
+/* {{{
+
+    This file is part of libtraceproc - a library for tracing Pro*C/OCI calls
+
+    Copyright (C) 2013 Georg Sauthoff <mail@georg.so>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+}}} */
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <signal.h>
+
+#include <sqlca.h>
+EXEC ORACLE OPTION (ORACA=YES);
+EXEC SQL INCLUDE ORACA; 
+
+#include "ret_check.h"
+
+#include "proc_util.h"
+#include "ora_util.h"
+
+
+/*
+
+   for i in ~/kl_*.zip ; do unzip -o $i; done
+
+   for i in klima/produkt_klima_Tageswerte_[0-9]* ; do < $i tr -d '[ \032]' | tail -n +2 ; done > m.inp
+
+   */
+
+static int create_table()
+{
+  fprintf(stderr, "Creating table ...\n");
+  EXEC SQL DROP TABLE tageswerte_tbl;
+  EXEC SQL CREATE TABLE tageswerte_tbl (
+      station_id NUMBER(10),
+      meassure_date VARCHAR2(8),
+      quality NUMBER(10),
+      bedeckungsgrad NUMBER,
+      rel_feuchte NUMBER,
+      dampfdruck NUMBER,
+      lufttemperatur NUMBER,
+      luftdruck_stationshoehe NUMBER,
+      windgeschwindigkeit NUMBER,
+      lufttemp_am_erdb_min NUMBER,
+      lufttemp_min NUMBER,
+      lufttemp_max NUMBER,
+      windspitze_max NUMBER,
+      niederschlagshoehe_ind NUMBER,
+      niederschlagshoehe NUMBER,
+      sonnenscheindauer NUMBER,
+      schneehoehe NUMBER
+           );
+  IFSQLRET(0, -1);
+  fprintf(stderr, "Creating table ... done\n");
+  return 0;
+}
+
+static int insert_data()
+{
+  fprintf(stderr, "Inserting data ...\n");
+  EXEC SQL SET TRANSACTION NAME 'INSERT_DAILY_TEMP';
+  IFSQLRET(0, -1);
+
+  char buffer[1024] = {0};
+  size_t line = 0;
+  for (;;) {
+    fgets(buffer, 1024, stdin);
+    if (!*buffer)
+      break;
+
+    EXEC SQL BEGIN DECLARE SECTION;
+    struct Row {
+      char station_id[8];
+      char meassure_date[9];
+      char quality[8];
+      char bedeckungsgrad[8];
+      char rel_feuchte[16];
+      char dampfdruck[8];
+      char lufttemperatur[16];
+      char luftdruck_stationshoehe[16];
+      char windgeschwindigkeit[16];
+      char lufttemp_am_erdb_min[16];
+      char lufttemp_min[16];
+      char lufttemp_max[16];
+      char windspitze_max[16];
+      char niederschlagshoehe_ind[16];
+      char niederschlagshoehe[16];
+      char sonnenscheindauer[16];
+      char schneehoehe[16];
+    };
+    struct Row row = {0};
+    EXEC SQL END DECLARE SECTION;
+    size_t i = 0;
+    const char *t = 0;
+    for (t = strtok(buffer, ","); t; t = strtok(0, ",")) {
+      switch (i) {
+        case 0: strcpy(row.station_id, t); break;
+        case 1: strcpy(row.meassure_date, t); break;
+        case 2: strcpy(row.quality, t); break;
+        case 3: strcpy(row.bedeckungsgrad, t); break;
+        case 4: strcpy(row.rel_feuchte, t); break;
+        case 5: strcpy(row.dampfdruck, t); break;
+        case 6: strcpy(row.lufttemperatur, t); break;
+        case 7: strcpy(row.luftdruck_stationshoehe, t); break;
+        case 8: strcpy(row.windgeschwindigkeit, t); break;
+        case 9: strcpy(row.lufttemp_am_erdb_min, t); break;
+        case 10: strcpy(row.lufttemp_min, t); break;
+        case 11: strcpy(row.lufttemp_max, t); break;
+        case 12: strcpy(row.windspitze_max, t); break;
+        case 13: strcpy(row.niederschlagshoehe_ind, t); break;
+        case 14: strcpy(row.niederschlagshoehe, t); break;
+        case 15: strcpy(row.sonnenscheindauer, t); break;
+        case 16: strcpy(row.schneehoehe, t);
+                 EXEC SQL INSERT INTO tageswerte_tbl (
+      station_id,
+      meassure_date,
+      quality,
+      bedeckungsgrad,
+      rel_feuchte,
+      dampfdruck,
+      lufttemperatur,
+      luftdruck_stationshoehe,
+      windgeschwindigkeit,
+      lufttemp_am_erdb_min,
+      lufttemp_min,
+      lufttemp_max,
+      windspitze_max,
+      niederschlagshoehe_ind,
+      niederschlagshoehe,
+      sonnenscheindauer,
+      schneehoehe
+                     ) VALUES (:row);
+                 if (sqlca.sqlcode) {
+       proc_error(sqlca.sqlcode, &oraca, 0, __func__, __FILE__, __LINE__);
+                   abort();
+                 }
+                 IFSQLRET(0, -1);
+                 break;
+      }
+      ++i;
+    }
+
+    if (feof(stdin))
+      break;
+    if (line && !(line%10000))
+      fprintf(stderr, "    ... inserted %zu lines ...\n", line);
+    ++line;
+  }
+  EXEC SQL COMMIT;
+  //EXEC SQL ROLLBACK;
+  IFSQLRET(0, -1);
+  fprintf(stderr, "Inserting data ... done\n");
+
+  return 0;
+}
+
+int main(int argc, char **argv)
+{
+  Ora_Connect pc = {0};
+  int ret =ora_init_vars(&pc);
+  IFTRUERET(ret, 0, 1);
+  proc_init_oraca();
+  EXEC SQL CONNECT :pc.username IDENTIFIED BY :pc.password USING :pc.dbspec;
+  IFSQLRET(0, -1);
+
+  struct sigaction act = {0};
+  act.sa_handler = SIG_DFL;
+  sigaction(SIGABRT, &act, 0);
+
+  ret = create_table();
+  IFTRUERET(ret, 0, 1);
+  ret = insert_data();
+  IFTRUERET(ret, 0, 1);
+
+  ret = proc_disconnect_commit();
+  IFTRUERET(ret, 0, 1);
+
+  return 0;
+}
+
+

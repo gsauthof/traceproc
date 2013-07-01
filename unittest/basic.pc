@@ -1,0 +1,111 @@
+/* {{{
+
+    This file is part of libtraceproc - a library for tracing Pro*C/OCI calls
+
+    Copyright (C) 2013 Georg Sauthoff <mail@georg.so>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+}}} */
+
+
+#include <stddef.h>
+#include <sqlcpr.h>
+EXEC SQL INCLUDE ORACA;
+
+#include <string.h>
+#include <ret_check.h>
+#include <proc_util.h>
+
+#include "basic.h"
+
+int select_date(const char *str, char *output, size_t n)
+{
+  EXEC ORACLE OPTION (CHAR_MAP=STRING);
+  char dstr[32] = {0};
+  EXEC SQL SELECT to_char(to_date(:str, 'YYYY-MM-DD HH24:MI:SS') + INTERVAL '4' hour, 'YYYY-MM-DD HH24:MI:SS')
+    INTO :dstr FROM dual ;
+  IFSQLRET(0, -1);
+  strncpy(output, dstr, n);
+  EXEC ORACLE OPTION (CHAR_MAP=CHARZ);
+  return 0;
+}
+
+int select_date_charz(const char *str, char *output, size_t n)
+{
+  EXEC ORACLE OPTION (CHAR_MAP=CHARZ);
+  char dstr[32] = {0};
+  EXEC SQL SELECT to_char(to_date(:str, 'YYYY-MM-DD HH24:MI:SS') + INTERVAL '4' hour, 'YYYY-MM-DD HH24:MI:SS')
+    INTO :dstr FROM dual ;
+  IFSQLRET(0, -1);
+  strncpy(output, dstr, n);
+  EXEC ORACLE OPTION (CHAR_MAP=CHARZ);
+  return 0;
+}
+
+int select_date_varchar(const char *str, char *output, size_t n, unsigned short *len)
+{
+  EXEC ORACLE OPTION (CHAR_MAP=STRING);
+  varchar dstr[32];
+  EXEC SQL SELECT to_char(to_date(:str, 'YYYY-MM-DD HH24:MI:SS') + INTERVAL '4' hour, 'YYYY-MM-DD HH24:MI:SS')
+    INTO :dstr FROM dual ;
+  IFSQLRET(0, -1);
+  *len = dstr.len;
+  strncpy(output, (char*)dstr.arr, dstr.len < n ? dstr.len : n);
+  EXEC ORACLE OPTION (CHAR_MAP=CHARZ);
+  return 0;
+}
+
+int char_type(char c, char *d)
+{
+  char x = 0;
+  EXEC SQL SELECT CHR(ASCII(:c)+1) INTO :x FROM dual ;
+  IFSQLRET(0, -1);
+  *d = x;
+  return 0;
+}
+
+int create_table()
+{
+  EXEC SQL DROP TABLE traceproc_tbl;
+
+  EXEC SQL CREATE TABLE traceproc_tbl(
+             s   VARCHAR2(32),
+             n   NUMBER(10),
+             f   NUMBER 
+           );
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+int drop_syn()
+{
+  EXEC SQL DROP SYNONYM traceproc_syn;
+  return 0;
+}
+
+
+int create_syn()
+{
+  EXEC SQL CREATE SYNONYM traceproc_syn FOR traceproc_tbl ;
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+int create_pub_syn()
+{
+  EXEC SQL CREATE PUBLIC SYNONYM traceproc_pub_syn FOR traceproc_tbl ;
+  return 0;
+}
+

@@ -1,0 +1,134 @@
+/* {{{
+
+    This file is part of libtraceproc - a library for tracing Pro*C/OCI calls
+
+    Copyright (C) 2013 Georg Sauthoff <mail@georg.so>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+}}} */
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <sqlca.h>
+EXEC ORACLE OPTION (ORACA=YES);
+EXEC SQL INCLUDE ORACA; 
+
+#include "proc_util.h"
+#include "ora_util.h"
+#include "ret_check.h"
+
+
+int create()
+{
+  EXEC SQL DROP TABLE q_tbl;
+
+  EXEC SQL CREATE TABLE q_tbl (
+      x NUMBER(10),
+      y NUMBER(10)
+      );
+  IFSQLRET(0, -1);
+
+  return 0;
+}
+
+struct Row {
+  int x;
+  int y;
+};
+typedef struct Row Row;
+
+
+int insert()
+{
+  Row *rows = calloc(128, sizeof(Row));
+  IFNULLRET(rows, -1);
+  unsigned i = 0;
+  for (i=0; i<128; ++i) {
+    rows[i].x = i;
+    rows[i].y = i*i;
+  }
+  Row *a = rows+6;
+  unsigned n = 32;
+  EXEC SQL FOR :n INSERT INTO q_tbl(x,y) VALUES (:a);
+  free(rows);
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+// XXX are dynamic insert of dynamically allocated array (of structs) 
+// be supported by Oracle Dynamic SQL?
+// or Oracle extended ANSI Dynamic SQL?
+int insert2()
+{
+  Row *rows = calloc(128, sizeof(Row));
+  IFNULLRET(rows, -1);
+  unsigned i = 0;
+  for (i=0; i<128; ++i) {
+    rows[i].x = i;
+    rows[i].y = i*i;
+  }
+  Row *a = rows+6;
+
+  char stmt[128] =
+    "INSERT INTO q_tbl(x,y) VALUES (:a, :b)";
+  EXEC SQL PREPARE meth2_istmt FROM :stmt;
+  IFSQLRET(0, -1);
+  unsigned n = 32;
+  EXEC SQL FOR :n EXECUTE meth2_istmt USING :a;
+  free(rows);
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+int del()
+{
+  char stmt[128] =
+    "DELETE FROM q_tbl WHERE x < :n "
+    "RETURNING count(*) INTO :c";
+  EXEC SQL PREPARE meth2_stmt FROM :stmt;
+  IFSQLRET(0, -1);
+  int n = 25;
+  size_t c = 0;
+  EXEC SQL EXECUTE meth2_stmt USING :n, :c;
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+int main(int argc, char **argv)
+{
+  int ret = proc_connect();
+  IFTRUERET(ret, 0, 1);
+
+  ret = ora_reset_signals();
+  IFTRUERET(ret, 0, 1);
+
+  ret = create();
+  IFTRUERET(ret, 0, 1);
+
+  //ret = insert();
+  ret = insert2();
+  IFTRUERET(ret, 0, 1);
+
+  ret = del();
+  IFTRUERET(ret, 0, 1);
+
+  ret = proc_disconnect_commit();
+  IFTRUERET(ret, 0, 1);
+
+  return 0;
+}

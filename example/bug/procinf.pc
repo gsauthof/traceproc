@@ -1,0 +1,64 @@
+/* {{{
+
+    This file is part of libtraceproc - a library for tracing Pro*C/OCI calls
+
+    Copyright (C) 2013 Georg Sauthoff <mail@georg.so>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+}}} */
+
+
+/* 2013-06-12, Georg Sauthoff
+
+   Minimal test case triggering an infinitve loop in Pro*C.
+
+   Expected behavior:
+   Pro*C should error out on re-definition of foo().
+
+   Actual behavior:
+   Pro*C does not terminate and ignores signal TERM.
+
+   Tested systems:
+   - CentOS release 6.4, x86, Pro*C/C++: Release 11.2.0.1.0
+
+   How to reproduce:
+
+       $ timeout -s 9 10 proc code=ANSI_C sys_include=/home/juser/app/juser/product/11.2.0/dbhome_1/precomp/public sys_include=/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include sys_include=/usr/include sys_include=/usr/include/linux iname=procinf.pc oname=procinf.c
+
+   */
+
+
+static int foo(void)
+{
+  int x = 5;
+
+  EXEC SQL DECLARE sel_cursor CURSOR FOR
+    SELECT 1 FROM dual WHERE 0 < :x;
+  EXEC SQL OPEN sel_cursor;
+
+  return 0;
+}
+
+static int foo(void)
+{
+  int x = 5;
+  return 0;
+}
+
+int main(int argc, char **argv)
+{
+  return 0;
+}
+

@@ -1,0 +1,58 @@
+/* {{{
+
+    This file is part of libtraceproc - a library for tracing Pro*C/OCI calls
+
+    Copyright (C) 2013 Georg Sauthoff <mail@georg.so>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+}}} */
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <signal.h>
+#include <sqlca.h>
+EXEC ORACLE OPTION (ORACA=YES);
+EXEC SQL INCLUDE ORACA; 
+
+#include "proc_util.h"
+#include "ora_util.h"
+#include "ret_check.h"
+
+
+int main(int argc, char **argv)
+{
+  ora_print_signals("before connect");
+  Ora_Connect pc = {0};
+  int ret = ora_init_vars(&pc);
+  IFTRUERET(ret, 0, 1);
+  proc_init_oraca();
+  EXEC SQL CONNECT :pc.username IDENTIFIED BY :pc.password USING :pc.dbspec;
+  IFSQLRET(0, 1);
+
+  ora_print_signals("after connect");
+
+  ret = ora_reset_signals();
+
+  IFTRUERET(ret, 0, 1);
+  ora_print_signals("after change");
+
+  ret = proc_disconnect_commit();
+  IFTRUERET(ret, 0, 1);
+
+  return 0;
+}

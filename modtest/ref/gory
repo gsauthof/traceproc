@@ -1,0 +1,1403 @@
+Libtraceproc is active.
+TRACEPROC_OPTIONS='-intercept -notime -gory -nosql -nostats  -fmodtest/ref/gory'
+===========================================================================
+stmt # 0, type CONNECT (27), line 49, #para 3 (in 3) (offset 5)   (foff: 0)
+MAX_ROW_INSERT=0 (max # of implicitly buffered rows on INSERT)
+SQL: CONNECT :username IDENTIFIED BY :password USING :dbspec
+Iterations: 1 (of 10)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |juser|
+    IN paramter (a=1)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |geheim|
+    IN paramter (a=2)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |orcl|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 10)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |juser|
+    IN paramter (a=1)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |geheim|
+    IN paramter (a=2)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |orcl|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 7, type DROP TBL|SYN|ALTER (1), line 82, #para 0 (in 0) (offset 147)   (foff: 0)
+SQL: drop TABLE example_tbl
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 8, type CREATE TABLE|SYNONYM (44), line 84, #para 0 (in 0) (offset 162)   (foff: 0)
+SQL: create TABLE example_tbl ( str VARCHAR2 ( 32 ) , n NUMBER ( 10 ) , f NUMBER )
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 9, type DROP TBL|SYN|ALTER (1), line 95, #para 0 (in 0) (offset 177)   (foff: 0)
+SQL: drop SYNONYM syn_tbl
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 10, type CREATE TABLE|SYNONYM (44), line 96, #para 0 (in 0) (offset 192)   (foff: 0)
+SQL: create SYNONYM syn_tbl FOR example_tbl
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 11, type CREATE TABLE|SYNONYM (44), line 98, #para 0 (in 0) (offset 207)   (foff: 0)
+SQL: create PUBLIC SYNONYM psyn_tbl FOR example_tbl
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: -1031, ORA-01031: insufficient privileges (create PUBLIC SYNONYM psyn_tbl FOR example_tbl)
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 12, type INSERT (3), line 108, #para 3 (in 3) (offset 222)   (foff: 0)
+SQL: insert into example_tbl (str,n,f) values (:b0,:b1,:b2)
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |FOOBAR|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |42|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 8, Size: 0, Ind 0
+      Value: |0.101010|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |FOOBAR|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |42|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 8, Size: 0, Ind 0
+      Value: |0.101010|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 13, type INSERT (3), line 114, #para 3 (in 3) (offset 249)   (foff: 0)
+SQL: insert into example_tbl (str,n,f) values (:b0,:b1,:b2)
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 0, Size: 0, Ind 0
+      Value: |HELLO|
+    IN paramter (a=1)
+      Type: INT (3), Length: 8, Size: 0, Ind 0
+      Value: |23|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 4, Size: 0, Ind 0
+      Value: |42.299999|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 0, Size: 0, Ind 0
+      Value: |HELLO|
+    IN paramter (a=1)
+      Type: INT (3), Length: 8, Size: 0, Ind 0
+      Value: |23|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 4, Size: 0, Ind 0
+      Value: |42.299999|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 14, type INSERT (3), line 121, #para 4 (in 3) (offset 276)   (foff: 0)
+SQL: insert into example_tbl (str,n,f) values (:b0,:b1,:b2) returning n into :b3 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 0, Size: 0, Ind 0
+      Value: |WORLD|
+    IN paramter (a=1)
+      Type: UNSIGNED (68), Length: 8, Size: 0, Ind 0
+      Value: |32|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 8, Size: 0, Ind 0
+      Value: |4.200000|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 0, Size: 0, Ind 0
+      Value: |WORLD|
+    IN paramter (a=1)
+      Type: UNSIGNED (68), Length: 8, Size: 0, Ind 0
+      Value: |32|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 8, Size: 0, Ind 0
+      Value: |4.200000|
+    OUT paramter (a=3)
+      Type: UNSIGNED (68), Length: 8, Size: 0, Ind 0
+      Value: |32|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 15, type INSERT (3), line 131, #para 4 (in 3) (offset 307)   (foff: 0)
+SQL: insert into example_tbl (str,n,f) values (:b0,:b1:b2,:b3) returning n into :b4:b5 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 0, Size: 0, Ind 0
+      Value: |BUZ|
+    IN paramter (a=1)
+      Type: UNSIGNED (68), Length: 8, Size: 0, Ind -1
+      Value: |NULL|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 8, Size: 0, Ind 0
+      Value: |8.200000|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 0, Size: 0, Ind 0
+      Value: |BUZ|
+    IN paramter (a=1)
+      Type: UNSIGNED (68), Length: 8, Size: 0, Ind -1
+      Value: |NULL|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 8, Size: 0, Ind 0
+      Value: |8.200000|
+    OUT paramter (a=3)
+      Type: UNSIGNED (68), Length: 8, Size: 0, Ind -1
+      Value: |NULL|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 16, type INSERT (3), line 151, #para 4 (in 3) (offset 338)   (foff: 0)
+SQL: insert into example_tbl (str,n,f) values (:s1:s2 ,:s3:s4 ,:s5:s6 ) returning n into :b2:b3 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 10, Size: 0, Ind 0
+      Value: |FUU|
+    IN paramter (a=1)
+      Type: UNSIGNED (68), Length: 8, Size: 0, Ind 0
+      Value: |13|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 8, Size: 0, Ind 0
+      Value: |123.500000|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 10, Size: 0, Ind 0
+      Value: |FUU|
+    IN paramter (a=1)
+      Type: UNSIGNED (68), Length: 8, Size: 0, Ind 0
+      Value: |13|
+    IN paramter (a=2)
+      Type: DOUBLE (4), Length: 8, Size: 0, Ind 0
+      Value: |123.500000|
+    OUT paramter (a=3)
+      Type: UNSIGNED (68), Length: 8, Size: 0, Ind 0
+      Value: |13|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 17, type UPDATE (5), line 161, #para 1 (in 1) (offset 369)   (foff: 0)
+SQL: update syn_tbl  set n=66 where str=:b0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 10, Size: 0, Ind 0
+      Value: |FUU|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 10, Size: 0, Ind 0
+      Value: |FUU|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 18, type DELETE (2), line 171, #para 1 (in 1) (offset 388)   (foff: 0)
+SQL: delete  from syn_tbl  where str=:b0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 10, Size: 0, Ind 0
+      Value: |WORLD|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 10, Size: 0, Ind 0
+      Value: |WORLD|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 19, type COMMIT (29), line 201, #para 0 (in 0) (offset 407)   (foff: 0)
+SQL: COMMIT
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 20, type INSERT (3), line 204, #para 2 (in 2) (offset 422)   (foff: 0)
+SQL: insert into example_tbl (str,n) values (:s1:s2 ,:s3:s4 )
+Iterations: 2 (of 2)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 2 (of 2)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 21, type ROLLBACK (31), line 207, #para 0 (in 0) (offset 445)   (foff: 0)
+SQL: ROLLBACK
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 22, type INSERT (3), line 211, #para 2 (in 2) (offset 460)   (foff: 0)
+SQL: insert into example_tbl (str,n) values (:s1:s2 ,:s3:s4 )
+Iterations: 4 (of 4)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+  Iteration: 2
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |c|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 3
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |d|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |9|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 4 (of 4)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+  Iteration: 2
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |c|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 3
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |d|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |9|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 23, type INSERT (3), line 252, #para 3 (in 2) (offset 483)   (foff: 0)
+SQL: insert into example_tbl (str,n) values (:s1:s2 ,:s3:s4 ) returning n into :s5:s6  
+Iterations: 4 (of 4)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+  Iteration: 2
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |c|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 3
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |d|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |9|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 4 (of 4)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+    OUT paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |0|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+    OUT paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |1|
+  Iteration: 2
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |c|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind -1
+      Value: |NULL|
+  Iteration: 3
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |d|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |9|
+    OUT paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |9|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 24, type INSERT (3), line 274, #para 3 (in 2) (offset 510)   (foff: 0)
+SQL: insert into example_tbl (str,n) values (:b0:b1,:b2:b3) returning (n+1) into :b4:b5 
+Iterations: 4 (of 4)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |a|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |0|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |b|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 4, Ind -1
+      Value: |NULL|
+  Iteration: 2
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |c|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |4|
+  Iteration: 3
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |d|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |9|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 4 (of 4)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |a|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |0|
+    OUT paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |1|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |b|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 4, Ind -1
+      Value: |NULL|
+    OUT paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind -1
+      Value: |NULL|
+  Iteration: 2
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |c|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |4|
+    OUT paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |5|
+  Iteration: 3
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 32, Ind 0
+      Value: |d|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |9|
+    OUT paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |10|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 1, type SELECT (4), line 41, #para 2 (in 1) (offset 5)   (foff: 0)
+SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+    OUT paramter (a=1)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23            |
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 2, type SELECT (4), line 47, #para 2 (in 1) (offset 28)   (foff: 0)
+SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+    OUT paramter (a=1)
+      Type: STRING (97), Length: 0, Size: 0, Ind 0
+      Value: ||
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 3, type SELECT (4), line 54, #para 2 (in 1) (offset 51)   (foff: 0)
+SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+    OUT paramter (a=1)
+      Type: STRING0 (5), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 4, type SELECT (4), line 59, #para 2 (in 1) (offset 74)   (foff: 0)
+SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+    OUT paramter (a=1)
+      Type: VARCHAR (9), Length: 22, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23| (19)
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 5, type SELECT (4), line 66, #para 2 (in 1) (offset 97)   (foff: 0)
+SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+    OUT paramter (a=1)
+      Type: STRING0 (5), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 6, type SELECT (4), line 73, #para 3 (in 2) (offset 120)   (foff: 0)
+SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),:b1) into :b2  from dual 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+    IN paramter (a=1)
+      Type: STRING (97), Length: 0, Size: 0, Ind 0
+      Value: |YYYY-MM-DD|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12 11:58:23|
+    IN paramter (a=1)
+      Type: STRING (97), Length: 0, Size: 0, Ind 0
+      Value: |YYYY-MM-DD|
+    OUT paramter (a=2)
+      Type: STRING (97), Length: 32, Size: 0, Ind 0
+      Value: |2013-06-12                     |
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 25, type OPEN cursor (9), line 286, #para 1 (in 1) (offset 537)   (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+SQL: select str ,n  from example_tbl where n<:b0 order by n            
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |5|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |5|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |a    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |0|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |a    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |0|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |a    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |0|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |b    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |b    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |c    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |4|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 1403, ORA-01403: no data found (select str ,n  from example_tbl where n<:b0 order by n            )
+
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind -1
+      Value: |NULL|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 25, type CLOSE (15), line 298, #para 0 (in 0) (offset 579)   (foff: 0)
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 26, type OPEN cursor (9), line 309, #para 1 (in 1) (offset 594) SCROLL  (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+SQL: select str ,n  from example_tbl where n<:b0 order by n            
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |5|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |5|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 26, type FETCH (13), line 315, #para 2 (in 0) (offset 613)  FETCH_LAST (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |c    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |4|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 26, type FETCH (13), line 318, #para 2 (in 0) (offset 636)  FETCH_FIRST (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |a    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |0|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 26, type FETCH (13), line 321, #para 2 (in 0) (offset 659)  FETCH_ABSOLUTE (foff: 3)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |a    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |0|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 26, type FETCH (13), line 324, #para 2 (in 0) (offset 682)  FETCH_RELATIVE (foff: 2)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |b    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 26, type FETCH (13), line 327, #para 2 (in 0) (offset 705)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |c    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |4|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 26, type FETCH (13), line 330, #para 2 (in 0) (offset 728)  FETCH_PRIOR (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |b    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 26, type FETCH (13), line 333, #para 2 (in 0) (offset 751)  FETCH_CURRENT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 1)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING (97), Length: 6, Size: 0, Ind 0
+      Value: |b    |
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 26, type CLOSE (15), line 337, #para 0 (in 0) (offset 774)   (foff: 0)
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 27, type SELECT (4), line 352, #para 3 (in 1) (offset 789)   (foff: 0)
+SQL: select str ,n into :s1:s2 ,:s3:s4   from example_tbl where n<:b2 order by n 
+Iterations: 1 (of 512)
+  Iteration: 0
+    IN paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |6|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 1403, ORA-01403: no data found (select str ,n into :s1:s2 ,:s3:s4   from example_tbl where n<:b2 order)
+
+Iterations: 6 (of 512)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+    IN paramter (a=2)
+      Type: INT (3), Length: 4, Size: 4, Ind 0
+      Value: |6|
+  Iteration: 1
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 2
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 3
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 4
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 5
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 28, type OPEN cursor (9), line 378, #para 1 (in 1) (offset 816)   (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+SQL: select str ,n  from example_tbl where n<:b0 order by n            
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |6|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |6|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 28, type FETCH (13), line 384, #para 2 (in 0) (offset 835)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 4)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 4 (of 4)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 1
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 2
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 3
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 28, type FETCH (13), line 384, #para 2 (in 0) (offset 835)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 4)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 1403, ORA-01403: no data found (select str ,n  from example_tbl where n<:b0 order by n            )
+
+Iterations: 2 (of 4)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 1
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 28, type CLOSE (15), line 397, #para 0 (in 0) (offset 858)   (foff: 0)
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 29, type EXECUTE IMMEDIATE (24), line 408, #para 1 (in 1) (offset 873)   (foff: 0)
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 128, Size: 0, Ind 0
+      Value: |DELETE FROM example_tbl WHERE n = 2048|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 1403, ORA-01403: no data found (DELETE FROM example_tbl WHERE n = 2048)
+
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 128, Size: 0, Ind 0
+      Value: |DELETE FROM example_tbl WHERE n = 2048|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 30, type PREPARE (17), line 418, #para 1 (in 1) (offset 892)   (foff: 0)
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 128, Size: 0, Ind 0
+      Value: |DELETE FROM example_tbl WHERE n = :n|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 128, Size: 0, Ind 0
+      Value: |DELETE FROM example_tbl WHERE n = :n|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 30, type EXECUTE (21), line 420, #para 1 (in 1) (offset 911)   (foff: 0)
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |4|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |4|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 31, type PREPARE (17), line 436, #para 1 (in 1) (offset 930)   (foff: 0)
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING0 (5), Length: 128, Size: 0, Ind 0
+      Value: |SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING0 (5), Length: 128, Size: 0, Ind 0
+      Value: |SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 31, type OPEN cursor dyn (45), line 440, #para 1 (in 1) (offset 949)   (foff: 0)
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |6|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: INT (3), Length: 4, Size: 0, Ind 0
+      Value: |6|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 31, type FETCH (13), line 446, #para 2 (in 0) (offset 968)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 4)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 4 (of 4)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 1
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 2
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |a|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
+  Iteration: 3
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 31, type FETCH (13), line 446, #para 2 (in 0) (offset 968)  FETCH_NEXT (foff: 0)
+PREFETCH=1 (# of prefetched rows)
+Iterations: 1 (of 4)
+  Iteration: 0
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 1403, ORA-01403: no data found (SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n)
+
+Iterations: 1 (of 4)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
+      Value: |NULL|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 31, type CLOSE (15), line 460, #para 0 (in 0) (offset 991)   (foff: 0)
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 32, type PREPARE (17), line 492, #para 1 (in 1) (offset 1006)   (foff: 0)
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 128, Size: 0, Ind 0
+      Value: |INSERT INTO example_tbl(str, n) VALUES (:x:a, :y:b)|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 128, Size: 0, Ind 0
+      Value: |INSERT INTO example_tbl(str, n) VALUES (:x:a, :y:b)|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 32, type EXECUTE (21), line 494, #para 2 (in 2) (offset 1025)   (foff: 0)
+Iterations: 8 (of 8)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Za|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zb|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |3|
+  Iteration: 2
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zc|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 3
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zd|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |13|
+  Iteration: 4
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Ze|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |21|
+  Iteration: 5
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zf|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |31|
+  Iteration: 6
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zg|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |43|
+  Iteration: 7
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zh|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |57|
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 8 (of 8)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Za|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+  Iteration: 1
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zb|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |3|
+  Iteration: 2
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zc|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind -1
+      Value: |NULL|
+  Iteration: 3
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zd|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |13|
+  Iteration: 4
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Ze|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |21|
+  Iteration: 5
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zf|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |31|
+  Iteration: 6
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zg|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |43|
+  Iteration: 7
+    IN paramter (a=0)
+      Type: STRING (97), Length: 32, Size: 36, Ind 0
+      Value: |Zh|
+    IN paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |57|
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 33, type CALL (122), line 503, #para 2 (in 2) (offset 1048)   (foff: 0)
+SQL: call DBMS_METADATA.GET_DDL('TABLE',:b0) into :b1 
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING0 (5), Length: 100, Size: 0, Ind 0
+      Value: |EXAMPLE_TBL|
+    IN paramter (a=1)
+      Type: STRING0 (5), Length: 1024, Size: 0, Ind 0
+      Value: ||
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+Iterations: 1 (of 1)
+  Iteration: 0
+    IN paramter (a=0)
+      Type: STRING0 (5), Length: 100, Size: 0, Ind 0
+      Value: |EXAMPLE_TBL|
+    IN paramter (a=1)
+      Type: STRING0 (5), Length: 1024, Size: 0, Ind 0
+      Value: |
+  CREATE TABLE "JUSER"."EXAMPLE_TBL" 
+   (	"STR" VARCHAR2(32), 
+	"N" NUMBER(10,0), 
+	"F" NUMBER
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" 
+ |
+---------------------------------------------------------------------------
+===========================================================================
+stmt # 3, type COMMIT RELEASE (30), line 63, #para 0 (in 0) (offset 71)   (foff: 0)
+SQL: COMMIT WORK RELEASE
+---------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQL-Code: 0
+---------------------------------------------------------------------------

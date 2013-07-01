@@ -1,0 +1,601 @@
+/* {{{
+
+    This file is part of libtraceproc - a library for tracing Pro*C/OCI calls
+
+    Copyright (C) 2013 Georg Sauthoff <mail@georg.so>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+}}} */
+
+
+//#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <sqlcpr.h>
+EXEC SQL INCLUDE ORACA; 
+
+
+#include <signal.h>
+
+#include "ret_check.h"
+
+#include "proc_util.h"
+
+static void pp_sigaction(int sig, struct sigaction *act)
+{
+  fprintf(stderr, "%d %p\n", sig, act->sa_sigaction);
+}
+
+void print_signals()
+{
+   static const int signals[] = { SIGABRT, SIGKILL, SIGFPE, SIGSEGV, 0 };
+   const int *i = signals;
+   for  (; *i; ++i)
+   {
+       struct sigaction act = {0};
+       int ret = sigaction(*i, 0, &act);
+       if (ret) {
+         fprintf(stderr, "sigaction failed for: %d", *i);
+         exit(23);
+       }
+       pp_sigaction(*i, &act);
+   }
+}
+
+static int select_foo()
+{
+  char str[32] = "2013-06-12 11:58:23";
+  char dstr[32] = {0};
+  EXEC SQL SELECT to_char(to_date(:str, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') INTO :dstr FROM dual ;
+  IFSQLRET(0, -1);
+  fprintf(stderr, "Sysdate: |%s|\n", dstr);
+
+  dstr[0] = 0;
+  char *x = dstr;
+  EXEC SQL SELECT to_char(to_date(:str, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') INTO :x FROM dual ;
+  IFSQLRET(0, -1);
+  fprintf(stderr, "Sysdate *: |%s|\n", x);
+
+  dstr[0] = 0;
+  char *y = dstr;
+  EXEC SQL VAR y is STRING(32);
+  EXEC SQL SELECT to_char(to_date(:str, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') INTO :y FROM dual ;
+  IFSQLRET(0, -1);
+  fprintf(stderr, "Sysdate VAR is*: |%s|\n", x);
+
+  varchar v[20] = {0};
+  EXEC SQL SELECT to_char(to_date(:str, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') INTO :v FROM dual ;
+  IFSQLRET(0, -1);
+  fprintf(stderr, "Sysdate varchar: |%.*s|\n", v.len, v.arr);
+
+  dstr[0] = 0;
+  // disable braindead blank-padding 'datatype'
+  EXEC ORACLE OPTION (char_map=string);
+  EXEC SQL SELECT to_char(to_date(:str, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') INTO :dstr FROM dual ;
+  IFSQLRET(0, -1);
+  EXEC ORACLE OPTION (char_map=charz); // default
+  fprintf(stderr, "Sysdate OPT: |%s|\n", dstr);
+
+  dstr[0] = 0;
+  const char spec[] = "YYYY-MM-DD";
+  EXEC SQL SELECT to_char(to_date(:str, 'YYYY-MM-DD HH24:MI:SS'), :spec) INTO :dstr FROM dual ;
+  IFSQLRET(0, -1);
+  fprintf(stderr, "Short-Sysdate: |%s|\n", dstr);
+
+  return 0;
+}
+
+static int create_foo()
+{
+  EXEC SQL DROP TABLE example_tbl;
+
+  EXEC SQL CREATE TABLE example_tbl (
+             str VARCHAR2(32),
+             n   NUMBER(10),
+             f   NUMBER 
+           );
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+static int synonym()
+{
+  EXEC SQL DROP SYNONYM syn_tbl;
+  EXEC SQL CREATE SYNONYM syn_tbl FOR example_tbl ;
+  IFSQLRET(0, -1);
+  EXEC SQL CREATE PUBLIC SYNONYM psyn_tbl FOR example_tbl ;
+  //IFSQLRET(0, -1);
+  return 0;
+}
+
+static int insert()
+{
+  char str[32] = "FOOBAR";
+  int n = 42;
+  double f = 0.10101;
+  EXEC SQL INSERT INTO example_tbl(str, n, f) VALUES (:str, :n, :f) ;
+  IFSQLRET(0, -1);
+
+  const char str2[] = "HELLO";
+  long n2 = 23;
+  float f2 = 42.3;
+  EXEC SQL INSERT INTO example_tbl(str, n, f) VALUES (:str2, :n2, :f2) ;
+  IFSQLRET(0, -1);
+
+  const char str3[] = "WORLD";
+  unsigned long n3 = 32;
+  unsigned long rn3 = 0;
+  double f3 = 4.2;
+  EXEC SQL INSERT INTO example_tbl(str, n, f) VALUES (:str3, :n3, :f3)
+    RETURNING n INTO :rn3 ;
+  IFSQLRET(0, -1);
+
+  const char str4[] = "BUZ";
+  unsigned long n4 = 11;
+  short n4_ind = -1;
+  unsigned long rn4 = 0;
+  short rn4_ind = 0;
+  double f4 = 8.2;
+  EXEC SQL INSERT INTO example_tbl(str, n, f) VALUES (:str4, :n4:n4_ind, :f4)
+    RETURNING n INTO :rn4:rn4_ind ;
+  IFSQLRET(0, -1);
+
+  struct Inp {
+     const char str[10];
+     unsigned long n;
+     double f;
+  };
+  struct Inp inp = {
+    "FUU", // .str = "FUU",
+    13, // .n = 13,
+    123.5 // .f = 123.5
+  };
+  struct Inp_Ind {
+     short str;
+     short n;
+     short f;
+  };
+  struct Inp_Ind inp_ind = {0};
+  EXEC SQL INSERT INTO example_tbl(str, n, f) VALUES (:inp:inp_ind)
+    RETURNING n INTO :rn4:rn4_ind ;
+  IFSQLRET(0, -1);
+
+  return 0;
+}
+
+static int update()
+{
+  char q[10] = "FUU";
+  EXEC SQL UPDATE syn_tbl SET n = 66 where str = :q ;
+
+  IFSQLRET(0, -1);
+
+  return 0;
+}
+
+static int delete()
+{
+  char q[10] = "WORLD";
+  EXEC SQL DELETE syn_tbl where str = :q ;
+
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+static int insert_array()
+{
+//strlen(0);
+//abort();
+  struct Row {
+    char str[32];
+    int n;
+  };
+  typedef struct Row Row;
+  struct Row_Ind {
+    short a;
+    short b;
+  };
+  typedef struct Row_Ind Row_Ind;
+  Row rows[4] = { {{0}} };
+  Row_Ind rows_ind[4] = { {0} };
+
+  size_t i = 0;
+  for (i = 0; i<4; ++i) {
+    rows[i].str[0] = 'a' + (i%26);
+    rows[i].n = i*i;
+  }
+  rows_ind[2].b = -1;
+
+  EXEC SQL COMMIT;
+  IFSQLRET(0, -1);
+  unsigned rows_to_insert = 2;
+  EXEC SQL FOR :rows_to_insert
+    INSERT INTO example_tbl(str, n) VALUES (:rows:rows_ind);
+  IFSQLRET(0, -1);
+  EXEC SQL ROLLBACK;
+  IFSQLRET(0, -1);
+
+
+  EXEC SQL INSERT INTO example_tbl(str, n) VALUES (:rows:rows_ind);
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+static int insert_array_ret()
+{
+  struct Row {
+    char str[32];
+    int n;
+  };
+  typedef struct Row Row;
+  struct Row_Ind {
+    short a;
+    short b;
+  };
+  typedef struct Row_Ind Row_Ind;
+  struct Row_Ret {
+    int n;
+  };
+  typedef struct Row_Ret Row_Ret;
+  struct Row_Ret_Ind {
+    short n;
+  };
+  typedef struct Row_Ret_Ind Row_Ret_Ind;
+  Row rows[4] = { {{0}} };
+  Row_Ind rows_ind[4] = { {0} };
+  Row_Ret rows_ret[4] = { {0} };
+  Row_Ret_Ind rows_ret_ind[4] = { {0} };
+
+  size_t i = 0;
+  for (i = 0; i<4; ++i) {
+    rows[i].str[0] = 'a' + (i%26);
+    rows[i].n = i*i;
+  }
+  rows_ind[2].b = -1;
+
+  // returns: IN IN OUT
+  //          IN IN OUT
+  //          ...
+
+  EXEC SQL INSERT INTO example_tbl(str, n) VALUES (:rows:rows_ind)
+    RETURNING n INTO :rows_ret:rows_ret_ind
+    ;
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+static int insert_array_vert()
+{
+  char str[4][32] = {0};
+  int n[4] = {0};
+  int ret[4] = {0};
+  short a[4] = {0};
+  short b[4] = {0};
+  short c[4] = {0};
+
+  size_t i = 0;
+  for (i = 0; i<4; ++i) {
+    str[i][0] = 'a' + (i%26);
+    n[i] = i*i;
+  }
+  b[1] = -1;
+  EXEC SQL INSERT INTO example_tbl(str, n) VALUES (:str:a, :n:b)
+    RETURNING (n+1) INTO :ret:c ;
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+static int select_curs()
+{
+  int x = 5;
+  EXEC SQL DECLARE sel_cursor CURSOR FOR
+    SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n;
+  IFSQLRET(0, -1);
+  EXEC SQL OPEN sel_cursor;
+  IFSQLRET(0, -1);
+  for (;;) {
+    char str[6] = {0};
+    int n = 0;
+    short a = 0, b = 0;
+    EXEC SQL FETCH sel_cursor INTO :str:a, :n:b;
+    if (sqlca.sqlcode == 1403)
+      break;
+    IFSQLRET(0, -1);
+    fprintf(stderr, "SELECT: |%s|, |%d|\n", str, n);
+  }
+  EXEC SQL CLOSE sel_cursor;
+  IFSQLRET(0, -1);
+  return 0;
+}
+
+static int select_curs_scroll()
+{
+  int x = 5;
+  EXEC SQL DECLARE scroll_cursor SCROLL CURSOR FOR
+    SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n;
+  IFSQLRET(0, -1);
+  EXEC SQL OPEN scroll_cursor;
+  IFSQLRET(0, -1);
+
+    char str[6] = {0};
+    int n = 0;
+    short a = 0, b = 0;
+    EXEC SQL FETCH LAST scroll_cursor INTO :str:a, :n:b;
+    IFSQLRET(0, -1);
+    fprintf(stderr, "SCROLL: |%s|, |%d|\n", str, n);
+    EXEC SQL FETCH FIRST scroll_cursor INTO :str:a, :n:b;
+    IFSQLRET(0, -1);
+    fprintf(stderr, "SCROLL: |%s|, |%d|\n", str, n);
+    EXEC SQL FETCH ABSOLUTE 3 scroll_cursor INTO :str:a, :n:b;
+    IFSQLRET(0, -1);
+    fprintf(stderr, "SCROLL: |%s|, |%d|\n", str, n);
+    EXEC SQL FETCH RELATIVE 2 scroll_cursor INTO :str:a, :n:b;
+    IFSQLRET(0, -1);
+    fprintf(stderr, "SCROLL: |%s|, |%d|\n", str, n);
+    EXEC SQL FETCH NEXT scroll_cursor INTO :str:a, :n:b;
+    IFSQLRET(0, -1);
+    fprintf(stderr, "SCROLL: |%s|, |%d|\n", str, n);
+    EXEC SQL FETCH PRIOR scroll_cursor INTO :str:a, :n:b;
+    IFSQLRET(0, -1);
+    fprintf(stderr, "SCROLL: |%s|, |%d|\n", str, n);
+    EXEC SQL FETCH CURRENT scroll_cursor INTO :str:a, :n:b;
+    IFSQLRET(0, -1);
+    fprintf(stderr, "SCROLL: |%s|, |%d|\n", str, n);
+
+  EXEC SQL CLOSE scroll_cursor;
+  IFSQLRET(0, -1);
+
+  return 0;
+}
+
+static int select_arr()
+{
+  struct Row { char str[32]; int n; };
+  struct Row rows[512] = {0};
+  struct Ind { short a; short b; };
+  struct Ind inds[512] = {0};
+
+  int x = 6;
+  EXEC ORACLE OPTION (char_map=string);
+  EXEC SQL SELECT str, n INTO :rows:inds FROM example_tbl WHERE n < :x ORDER BY n;
+  EXEC ORACLE OPTION (char_map=charz);
+  if (sqlca.sqlcode != 1403)
+    IFSQLRET(0, -1);
+
+  size_t i = 0;
+  size_t n = sqlca.sqlerrd[2];
+  for (; i<n; ++i) {
+    fprintf(stderr, "ARR SELECT: |%s|, |%d|\n", rows[i].str, rows[i].n);
+  }
+  return 0;
+}
+
+static int select_arr_curs()
+{
+  EXEC ORACLE OPTION (char_map=string);
+
+  struct Row { char str[32]; int n; };
+  struct Row rows[4] = {0};
+  struct Ind { short a; short b; };
+  struct Ind inds[4] = {0};
+
+  int x = 6;
+  EXEC SQL DECLARE arr_curs CURSOR FOR
+    SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n;
+
+  EXEC SQL OPEN arr_curs;
+  IFSQLRET(0, -1);
+
+  size_t last_fetched = 0;
+  int sqlcode = 0;
+  do {
+    EXEC SQL FETCH arr_curs INTO :rows:inds;
+    if (sqlca.sqlcode != 1403)
+      IFSQLRET(0, -1);
+    sqlcode = sqlca.sqlcode;
+    size_t fetched = sqlca.sqlerrd[2];
+    size_t n = fetched-last_fetched;
+    last_fetched = fetched;
+    size_t i = 0;
+    for (i=0; i<n; ++i) {
+      fprintf(stderr, "ARR FETCH SELECT: |%s|, |%d|\n",
+          rows[i].str, rows[i].n);
+    }
+  } while (!sqlcode);
+  EXEC SQL CLOSE arr_curs;
+  IFSQLRET(0, -1);
+
+  return 0;
+
+  EXEC ORACLE OPTION (char_map=charz);
+}
+
+static int dyn_method_1()
+{
+  char stmt[128] = "DELETE FROM example_tbl WHERE n = 2048";
+  EXEC SQL EXECUTE IMMEDIATE :stmt;
+  if (sqlca.sqlcode != 1403)
+    IFSQLRET(0, -1);
+  return 0;
+}
+
+static int dyn_method_2()
+{
+  int n = 4;
+  char stmt[128] = "DELETE FROM example_tbl WHERE n = :n";
+  EXEC SQL PREPARE meth2_stmt FROM :stmt;
+  IFSQLRET(0, -1);
+  EXEC SQL EXECUTE meth2_stmt USING :n;
+  if (sqlca.sqlcode != 1403)
+    IFSQLRET(0, -1);
+  return 0;
+}
+
+static int dyn_method_3()
+{
+  EXEC ORACLE OPTION (char_map=string);
+
+  struct Row { char str[32]; int n; };
+  struct Row rows[4] = {0};
+  struct Ind { short a; short b; };
+  struct Ind inds[4] = {0};
+
+  char stmt[128] = "SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n";
+  EXEC SQL PREPARE meth3_stmt from :stmt;
+  IFSQLRET(0, -1);
+  EXEC SQL DECLARE meth3_cursor CURSOR FOR meth3_stmt;
+  int x = 6;
+  EXEC SQL OPEN meth3_cursor USING :x;
+  IFSQLRET(0, -1);
+
+  size_t last_fetched = 0;
+  int sqlcode = 0;
+  do {
+    EXEC SQL FETCH meth3_cursor INTO :rows:inds;
+    if (sqlca.sqlcode != 1403)
+      IFSQLRET(0, -1);
+    sqlcode = sqlca.sqlcode;
+    size_t fetched = sqlca.sqlerrd[2];
+    size_t n = fetched-last_fetched;
+    last_fetched = fetched;
+    size_t i = 0;
+    for (i=0; i<n; ++i) {
+      fprintf(stderr, "METH3 ARR FETCH SELECT: |%s|, |%d|\n",
+          rows[i].str, rows[i].n);
+    }
+  } while (!sqlcode);
+
+  EXEC SQL CLOSE meth3_cursor;
+  IFSQLRET(0, -1);
+
+  return 0;
+
+  EXEC ORACLE OPTION (char_map=charz);
+}
+
+static int insert_dyn()
+{
+  struct Row {
+    char str[32];
+    int n;
+  };
+  typedef struct Row Row;
+  struct Row_Ind {
+    short a;
+    short b;
+  };
+  typedef struct Row_Ind Row_Ind;
+  Row rows[8] = { {{0}} };
+  Row_Ind rows_ind[8] = { {0} };
+
+  size_t i = 0;
+  for (i = 0; i<8; ++i) {
+    rows[i].str[0] = 'Z';
+    rows[i].str[1] = 'a' + (i%26);
+    rows[i].n = i*i+i+1;
+  }
+  rows_ind[2].b = -1;
+
+  char stmt[128] = "INSERT INTO example_tbl(str, n) VALUES (:x:a, :y:b)";
+  EXEC SQL PREPARE dyn_ins_stmt FROM :stmt;
+  IFSQLRET(0, -1);
+  EXEC SQL EXECUTE dyn_ins_stmt USING :rows:rows_ind;
+  return 0;
+}
+
+static int call()
+{
+  EXEC ORACLE OPTION (char_map=string);
+  char ret[1024] = {0};
+  char name[100] = "EXAMPLE_TBL";
+  EXEC SQL CALL DBMS_METADATA.GET_DDL('TABLE',:name) INTO :ret;
+  IFSQLRET(0, -1);
+  return 0;
+  EXEC ORACLE OPTION (char_map=charz);
+}
+
+int main(int argc, char **argv)
+{
+  // silence unused warning:
+  (void)sqlstm;
+
+  print_signals();
+    int ret = proc_connect();
+  print_signals();
+  struct sigaction act = {0};
+  act.sa_handler = SIG_DFL;
+  sigaction(SIGFPE, &act, 0);
+  print_signals(); ora_reset_signals();
+    IFTRUERET(ret, 0, 1);
+
+    ret = create_foo();
+    IFTRUERET(ret, 0, 1);
+    ret = synonym();
+    IFTRUERET(ret, 0, 1);
+    ret = insert();
+    IFTRUERET(ret, 0, 1);
+
+    ret = update();
+    IFTRUERET(ret, 0, 1);
+    ret = delete();
+    IFTRUERET(ret, 0, 1);
+
+    ret = insert_array();
+    IFTRUERET(ret, 0, 1);
+
+    ret = insert_array_ret();
+    IFTRUERET(ret, 0, 1);
+    ret = insert_array_vert();
+    IFTRUERET(ret, 0, 1);
+
+    ret = select_foo();
+    IFTRUERET(ret, 0, 1);
+
+    ret = select_curs();
+    IFTRUERET(ret, 0, 1);
+
+    ret = select_curs_scroll();
+    IFTRUERET(ret, 0, 1);
+
+    ret = select_arr();
+    IFTRUERET(ret, 0, 1);
+
+    ret = select_arr_curs();
+    IFTRUERET(ret, 0, 1);
+
+    ret = dyn_method_1();
+    IFTRUERET(ret, 0, 1);
+
+    ret = dyn_method_2();
+    IFTRUERET(ret, 0, 1);
+
+    ret = dyn_method_3();
+    IFTRUERET(ret, 0, 1);
+
+    ret = insert_dyn();
+    IFTRUERET(ret, 0, 1);
+
+    ret = call();
+    IFTRUERET(ret, 0, 1);
+
+    if (argc > 1) 
+      ret = proc_disconnect_rollback();
+    else
+      ret = proc_disconnect_commit();
+    IFTRUERET(ret, 0, 1);
+    return 0;
+}

@@ -1,0 +1,8 @@
+*.o
+*.lis
+*.so
+*.po
+*.swp
+*.dcl
+*.cud
+*.cod

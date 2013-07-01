@@ -1,0 +1,990 @@
+Libtraceproc is active.
+TRACEPROC_OPTIONS='-intercept -notime -nogory -sql -nostats  -fmodtest/ref/sql'
+
+
+-- ###########################################################################
+-- Before execution:
+-- proc_util.pc:49
+-- MAX_ROW_INSERT=0 (max # of implicitly buffered rows on INSERTs)
+CONNECT 'juser' IDENTIFIED BY 'geheim' USING 'orcl';
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- proc_util.pc:49
+-- MAX_ROW_INSERT=0 (max # of implicitly buffered rows on INSERTs)
+CONNECT 'juser' IDENTIFIED BY 'geheim' USING 'orcl';
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:82
+drop TABLE example_tbl;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:82
+drop TABLE example_tbl;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:84
+create TABLE example_tbl ( str VARCHAR2 ( 32 ) , n NUMBER ( 10 ) , f NUMBER );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:84
+create TABLE example_tbl ( str VARCHAR2 ( 32 ) , n NUMBER ( 10 ) , f NUMBER );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:95
+drop SYNONYM syn_tbl;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:95
+drop SYNONYM syn_tbl;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:96
+create SYNONYM syn_tbl FOR example_tbl;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:96
+create SYNONYM syn_tbl FOR example_tbl;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:98
+create PUBLIC SYNONYM psyn_tbl FOR example_tbl;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution (errorcode: -1031, ORA-01031: insufficient privileges, create PUBLIC SYNONYM psyn_tbl FOR example_tbl):
+-- example/main.pc:98
+create PUBLIC SYNONYM psyn_tbl FOR example_tbl;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:108
+insert into example_tbl (str,n,f) values ('FOOBAR',42,0.101010);
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:108
+insert into example_tbl (str,n,f) values ('FOOBAR',42,0.101010);
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:114
+insert into example_tbl (str,n,f) values ('HELLO',23,42.299999);
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:114
+insert into example_tbl (str,n,f) values ('HELLO',23,42.299999);
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:121
+insert into example_tbl (str,n,f) values ('WORLD',32,4.200000) returning n into :b3 ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:121
+insert into example_tbl (str,n,f) values ('WORLD',32,4.200000) returning n into 32 ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:131
+insert into example_tbl (str,n,f) values ('BUZ',NULL,8.200000) returning n into :b4:b5 ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:131
+insert into example_tbl (str,n,f) values ('BUZ',NULL,8.200000) returning n into NULL ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:151
+insert into example_tbl (str,n,f) values ('FUU' ,13 ,123.500000 ) returning n into :b2:b3 ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:151
+insert into example_tbl (str,n,f) values ('FUU' ,13 ,123.500000 ) returning n into 13 ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:161
+update syn_tbl  set n=66 where str='FUU';
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:161
+update syn_tbl  set n=66 where str='FUU';
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:171
+delete  from syn_tbl  where str='WORLD';
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:171
+delete  from syn_tbl  where str='WORLD';
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:201
+COMMIT;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:201
+COMMIT;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:204
+insert into example_tbl (str,n) values ('a' ,0 );
+insert into example_tbl (str,n) values ('b' ,1 );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:204
+insert into example_tbl (str,n) values ('a' ,0 );
+insert into example_tbl (str,n) values ('b' ,1 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:207
+ROLLBACK;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:207
+ROLLBACK;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:211
+insert into example_tbl (str,n) values ('a' ,0 );
+insert into example_tbl (str,n) values ('b' ,1 );
+insert into example_tbl (str,n) values ('c' ,NULL );
+insert into example_tbl (str,n) values ('d' ,9 );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:211
+insert into example_tbl (str,n) values ('a' ,0 );
+insert into example_tbl (str,n) values ('b' ,1 );
+insert into example_tbl (str,n) values ('c' ,NULL );
+insert into example_tbl (str,n) values ('d' ,9 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:252
+insert into example_tbl (str,n) values ('a' ,0 ) returning n into :s5:s6  ;
+insert into example_tbl (str,n) values ('b' ,1 ) returning n into :s5:s6  ;
+insert into example_tbl (str,n) values ('c' ,NULL ) returning n into :s5:s6  ;
+insert into example_tbl (str,n) values ('d' ,9 ) returning n into :s5:s6  ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:252
+insert into example_tbl (str,n) values ('a' ,0 ) returning n into 0  ;
+insert into example_tbl (str,n) values ('b' ,1 ) returning n into 1  ;
+insert into example_tbl (str,n) values ('c' ,NULL ) returning n into NULL  ;
+insert into example_tbl (str,n) values ('d' ,9 ) returning n into 9  ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:274
+insert into example_tbl (str,n) values ('a',0) returning (n+1) into :b4:b5 ;
+insert into example_tbl (str,n) values ('b',NULL) returning (n+1) into :b4:b5 ;
+insert into example_tbl (str,n) values ('c',4) returning (n+1) into :b4:b5 ;
+insert into example_tbl (str,n) values ('d',9) returning (n+1) into :b4:b5 ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:274
+insert into example_tbl (str,n) values ('a',0) returning (n+1) into 1 ;
+insert into example_tbl (str,n) values ('b',NULL) returning (n+1) into NULL ;
+insert into example_tbl (str,n) values ('c',4) returning (n+1) into 5 ;
+insert into example_tbl (str,n) values ('d',9) returning (n+1) into 10 ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:41
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:41
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into '2013-06-12 11:58:23            '  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:47
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:47
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into ''  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:54
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:54
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into '2013-06-12 11:58:23'  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:59
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:59
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into '2013-06-12 11:58:23'  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:66
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:66
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into '2013-06-12 11:58:23'  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:73
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD') into :b2  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:73
+select to_char(to_date('2013-06-12 11:58:23','YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD') into '2013-06-12                     '  from dual ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:286
+-- PREFETCH=1 (# of prefetched rows)
+select str ,n  from example_tbl where n<5 order by n            ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:286
+-- PREFETCH=1 (# of prefetched rows)
+select str ,n  from example_tbl where n<5 order by n            ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'a    ', 0 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'a    ', 0 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'a    ', 0 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'b    ', 1 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'b    ', 1 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'c    ', 4 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution (errorcode: 1403, ORA-01403: no data found, select str ,n  from example_tbl where n<:b0 order by n            ):
+-- example/main.pc:292
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( NULL, NULL );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:298
+-- Pseudo-SQL: CLOSE
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:298
+-- Pseudo-SQL: CLOSE
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:309
+-- PREFETCH=1 (# of prefetched rows)
+select str ,n  from example_tbl where n<5 order by n            ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:309
+-- PREFETCH=1 (# of prefetched rows)
+select str ,n  from example_tbl where n<5 order by n            ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:315
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:315
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'c    ', 4 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:318
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:318
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'a    ', 0 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:321
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:321
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'a    ', 0 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:324
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:324
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'b    ', 1 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:327
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:327
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'c    ', 4 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:330
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:330
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'b    ', 1 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:333
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:333
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'b    ', 1 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:337
+-- Pseudo-SQL: CLOSE
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:337
+-- Pseudo-SQL: CLOSE
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:352
+select str ,n into :s1:s2 ,:s3:s4   from example_tbl where n<6 order by n ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution (errorcode: 1403, ORA-01403: no data found, select str ,n into :s1:s2 ,:s3:s4   from example_tbl where n<:b2 order):
+-- example/main.pc:352
+select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
+select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
+select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
+select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
+select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
+select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:378
+-- PREFETCH=1 (# of prefetched rows)
+select str ,n  from example_tbl where n<6 order by n            ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:378
+-- PREFETCH=1 (# of prefetched rows)
+select str ,n  from example_tbl where n<6 order by n            ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:384
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:384
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'a', 0 );
+( 'a', 0 );
+( 'a', 0 );
+( 'b', 1 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:384
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution (errorcode: 1403, ORA-01403: no data found, select str ,n  from example_tbl where n<:b0 order by n            ):
+-- example/main.pc:384
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( NULL, NULL );
+( NULL, NULL );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:397
+-- Pseudo-SQL: CLOSE
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:397
+-- Pseudo-SQL: CLOSE
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:408
+-- Pseudo-SQL: EXECUTE IMMEDIATE
+-- EXECUTING IMMEDIATELY statement:
+DELETE FROM example_tbl WHERE n = 2048;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution (errorcode: 1403, ORA-01403: no data found, DELETE FROM example_tbl WHERE n = 2048):
+-- example/main.pc:408
+-- Pseudo-SQL: EXECUTE IMMEDIATE
+-- EXECUTING IMMEDIATELY statement:
+DELETE FROM example_tbl WHERE n = 2048;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:418
+-- Pseudo-SQL: PREPARE
+( 'DELETE FROM example_tbl WHERE n = :n' );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:418
+-- Pseudo-SQL: PREPARE
+( 'DELETE FROM example_tbl WHERE n = :n' );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:420
+-- Pseudo-SQL: EXECUTE
+-- EXECUTING prepared statement:
+DELETE FROM example_tbl WHERE n = 4;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:420
+-- Pseudo-SQL: EXECUTE
+-- EXECUTING prepared statement:
+DELETE FROM example_tbl WHERE n = 4;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:436
+-- Pseudo-SQL: PREPARE
+( 'SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n' );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:436
+-- Pseudo-SQL: PREPARE
+( 'SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n' );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:440
+-- Pseudo-SQL: OPEN cursor dyn
+( 6 );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:440
+-- Pseudo-SQL: OPEN cursor dyn
+( 6 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:446
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:446
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( 'a', 0 );
+( 'a', 0 );
+( 'a', 0 );
+( 'b', 1 );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:446
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( :XXX, :XXX );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution (errorcode: 1403, ORA-01403: no data found, SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n):
+-- example/main.pc:446
+-- Pseudo-SQL: FETCH
+-- PREFETCH=1 (# of prefetched rows)
+( NULL, NULL );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:460
+-- Pseudo-SQL: CLOSE
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:460
+-- Pseudo-SQL: CLOSE
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:492
+-- Pseudo-SQL: PREPARE
+( 'INSERT INTO example_tbl(str, n) VALUES (:x:a, :y:b)' );
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:492
+-- Pseudo-SQL: PREPARE
+( 'INSERT INTO example_tbl(str, n) VALUES (:x:a, :y:b)' );
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:494
+-- Pseudo-SQL: EXECUTE
+-- EXECUTING prepared statement:
+INSERT INTO example_tbl(str, n) VALUES ('Za', 1);
+INSERT INTO example_tbl(str, n) VALUES ('Zb', 3);
+INSERT INTO example_tbl(str, n) VALUES ('Zc', NULL);
+INSERT INTO example_tbl(str, n) VALUES ('Zd', 13);
+INSERT INTO example_tbl(str, n) VALUES ('Ze', 21);
+INSERT INTO example_tbl(str, n) VALUES ('Zf', 31);
+INSERT INTO example_tbl(str, n) VALUES ('Zg', 43);
+INSERT INTO example_tbl(str, n) VALUES ('Zh', 57);
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:494
+-- Pseudo-SQL: EXECUTE
+-- EXECUTING prepared statement:
+INSERT INTO example_tbl(str, n) VALUES ('Za', 1);
+INSERT INTO example_tbl(str, n) VALUES ('Zb', 3);
+INSERT INTO example_tbl(str, n) VALUES ('Zc', NULL);
+INSERT INTO example_tbl(str, n) VALUES ('Zd', 13);
+INSERT INTO example_tbl(str, n) VALUES ('Ze', 21);
+INSERT INTO example_tbl(str, n) VALUES ('Zf', 31);
+INSERT INTO example_tbl(str, n) VALUES ('Zg', 43);
+INSERT INTO example_tbl(str, n) VALUES ('Zh', 57);
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- example/main.pc:503
+call DBMS_METADATA.GET_DDL('TABLE','EXAMPLE_TBL') into '' ;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- example/main.pc:503
+call DBMS_METADATA.GET_DDL('TABLE','EXAMPLE_TBL') into '
+  CREATE TABLE "JUSER"."EXAMPLE_TBL" 
+   (	"STR" VARCHAR2(32), 
+	"N" NUMBER(10,0), 
+	"F" NUMBER
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" 
+ ' ;
+-- ---------------------------------------------------------------------------
+
+
+-- ###########################################################################
+-- Before execution:
+-- proc_util.pc:63
+COMMIT WORK RELEASE;
+-- ---------------------------------------------------------------------------
+
+
+-- ===========================================================================
+-- After execution:
+-- proc_util.pc:63
+COMMIT WORK RELEASE;
+-- ---------------------------------------------------------------------------

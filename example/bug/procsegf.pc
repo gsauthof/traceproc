@@ -1,0 +1,46 @@
+/* {{{
+
+    This file is part of libtraceproc - a library for tracing Pro*C/OCI calls
+
+    Copyright (C) 2013 Georg Sauthoff <mail@georg.so>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+}}} */
+
+
+
+/* 2013-06-12, Georg Sauthoff
+
+   Minimal example to segfault Oracle Pro*C 11.2.
+
+   Expected result:
+   error message or success
+
+   Actual result:
+   segmentation fault
+
+   Tested systems:
+   - CentOS release 6.4, x86, Pro*C/C++: Release 11.2.0.1.0
+
+   How to reproduce:
+       $ proc code=ANSI_C sqlcheck=syntax sys_include=/home/juser/app/juser/product/11.2.0/dbhome_1/precomp/public sys_include=/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include sys_include=/usr/include sys_include=/usr/include/linux  iname=procsegf.pc oname=procsegf.c
+
+   */
+
+int main(int argc, char **argv)
+{
+  EXEC SQL SET TRANSACTION;
+  return 0;
+}

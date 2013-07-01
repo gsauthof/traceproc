@@ -1,0 +1,98 @@
+/* {{{
+
+    This file is part of libtraceproc - a library for tracing Pro*C/OCI calls
+
+    Copyright (C) 2013 Georg Sauthoff <mail@georg.so>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+}}} */
+
+
+/* 2013-06-22, Georg Sauthoff
+
+   At least on some Oracle 11.2 versions the 2nd insert fails because
+   the indicator value from the first one seems to be re-used when
+   implicitly buffered inserts are turned on.
+
+   - e.g. on Centos 6, x86-64,  Oracle 11.2.0.1.0
+
+   How to reproduce:
+
+   proc max_row_insert=1000 lines=yes code=ANSI_C sqlcheck=syntax sys_include=$ORACLE_HOME/precomp/public sys_include=/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include sys_include=/usr/include sys_include=/usr/include/linux include=$ORACLE_HOME/precomp/public include=. iname=example/bug/indicator.pc oname=example/bug/indicator.c && cc example/bug/indicator.c -g -Wall -I. -I $ORACLE_HOME/precomp/public -o a.out proc_util.o ora_util.o -L$ORACLE_HOME/lib -Wl,-R$ORACLE_HOME/lib -lclntsh
+
+
+   */
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <sqlca.h>
+EXEC ORACLE OPTION (ORACA=YES);
+EXEC SQL INCLUDE ORACA; 
+
+#include "proc_util.h"
+#include "ora_util.h"
+#include "ret_check.h"
+
+
+static int insert()
+{
+  EXEC SQL DROP TABLE A_TBL;
+  EXEC SQL DROP TABLE B_TBL;
+
+  EXEC SQL CREATE TABLE A_TBL (
+      fielda varchar2(16)
+      );
+  IFSQLRET(0, -1);
+  EXEC SQL CREATE TABLE B_TBL (
+      fieldb varchar2(16) NOT NULL
+      );
+  IFSQLRET(0, -1);
+
+  const char s1[10] = "hello";
+  const char s2[10] = "world";
+  short i1 = -1;
+
+  EXEC SQL INSERT INTO A_TBL(fielda) values (:s1:i1);
+  IFSQLRET(0, -1);
+  fprintf(stderr, "Insert a\n");
+  EXEC SQL INSERT INTO B_TBL(fieldb) values (:s2);
+  IFSQLRET(0, -1);
+  fprintf(stderr, "Insert b\n");
+  return 0;
+}
+
+int main(int argc, char **argv)
+{
+  Ora_Connect pc = {0};
+  int ret =ora_init_vars(&pc);
+  IFTRUERET(ret, 0, 1);
+  proc_init_oraca();
+  EXEC SQL CONNECT :pc.username IDENTIFIED BY :pc.password USING :pc.dbspec;
+  IFSQLRET(0, -1);
+
+  ret = ora_reset_signals();
+  IFTRUERET(ret, 0, 1);
+
+  ret = insert();
+  IFTRUERET(ret, 0, 1);
+
+  ret = proc_disconnect_commit();
+  IFTRUERET(ret, 0, 1);
+
+  return 0;
+}
