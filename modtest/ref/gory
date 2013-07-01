@@ -1,7 +1,7 @@
 Libtraceproc is active.
 TRACEPROC_OPTIONS='-intercept -notime -gory -nosql -nostats  -fmodtest/ref/gory'
 ===========================================================================
-stmt # 0, type CONNECT (27), line 49, #para 3 (in 3) (offset 5)   (foff: 0)
+stmt # 0, type CONNECT (27), line 71, #para 3 (in 3) (offset 5)   (foff: 0)
 MAX_ROW_INSERT=0 (max # of implicitly buffered rows on INSERT)
 SQL: CONNECT :username IDENTIFIED BY :password USING :dbspec
 Iterations: 1 (of 10)
@@ -31,42 +31,42 @@ Iterations: 1 (of 10)
       Value: |orcl|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 7, type DROP TBL|SYN|ALTER (1), line 82, #para 0 (in 0) (offset 147)   (foff: 0)
+stmt # 7, type DROP TBL|SYN|ALTER (1), line 104, #para 0 (in 0) (offset 147)   (foff: 0)
 SQL: drop TABLE example_tbl
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 8, type CREATE TABLE|SYNONYM (44), line 84, #para 0 (in 0) (offset 162)   (foff: 0)
+stmt # 8, type CREATE TABLE|SYNONYM (44), line 106, #para 0 (in 0) (offset 162)   (foff: 0)
 SQL: create TABLE example_tbl ( str VARCHAR2 ( 32 ) , n NUMBER ( 10 ) , f NUMBER )
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 9, type DROP TBL|SYN|ALTER (1), line 95, #para 0 (in 0) (offset 177)   (foff: 0)
+stmt # 9, type DROP TBL|SYN|ALTER (1), line 117, #para 0 (in 0) (offset 177)   (foff: 0)
 SQL: drop SYNONYM syn_tbl
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 10, type CREATE TABLE|SYNONYM (44), line 96, #para 0 (in 0) (offset 192)   (foff: 0)
+stmt # 10, type CREATE TABLE|SYNONYM (44), line 118, #para 0 (in 0) (offset 192)   (foff: 0)
 SQL: create SYNONYM syn_tbl FOR example_tbl
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 11, type CREATE TABLE|SYNONYM (44), line 98, #para 0 (in 0) (offset 207)   (foff: 0)
+stmt # 11, type CREATE TABLE|SYNONYM (44), line 120, #para 0 (in 0) (offset 207)   (foff: 0)
 SQL: create PUBLIC SYNONYM psyn_tbl FOR example_tbl
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: -1031, ORA-01031: insufficient privileges (create PUBLIC SYNONYM psyn_tbl FOR example_tbl)
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 12, type INSERT (3), line 108, #para 3 (in 3) (offset 222)   (foff: 0)
+stmt # 12, type INSERT (3), line 130, #para 3 (in 3) (offset 222)   (foff: 0)
 SQL: insert into example_tbl (str,n,f) values (:b0,:b1,:b2)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -95,7 +95,7 @@ Iterations: 1 (of 1)
       Value: |0.101010|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 13, type INSERT (3), line 114, #para 3 (in 3) (offset 249)   (foff: 0)
+stmt # 13, type INSERT (3), line 136, #para 3 (in 3) (offset 249)   (foff: 0)
 SQL: insert into example_tbl (str,n,f) values (:b0,:b1,:b2)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -124,7 +124,7 @@ Iterations: 1 (of 1)
       Value: |42.299999|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 14, type INSERT (3), line 121, #para 4 (in 3) (offset 276)   (foff: 0)
+stmt # 14, type INSERT (3), line 143, #para 4 (in 3) (offset 276)   (foff: 0)
 SQL: insert into example_tbl (str,n,f) values (:b0,:b1,:b2) returning n into :b3 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -156,7 +156,7 @@ Iterations: 1 (of 1)
       Value: |32|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 15, type INSERT (3), line 131, #para 4 (in 3) (offset 307)   (foff: 0)
+stmt # 15, type INSERT (3), line 153, #para 4 (in 3) (offset 307)   (foff: 0)
 SQL: insert into example_tbl (str,n,f) values (:b0,:b1:b2,:b3) returning n into :b4:b5 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -188,7 +188,7 @@ Iterations: 1 (of 1)
       Value: |NULL|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 16, type INSERT (3), line 151, #para 4 (in 3) (offset 338)   (foff: 0)
+stmt # 16, type INSERT (3), line 173, #para 4 (in 3) (offset 338)   (foff: 0)
 SQL: insert into example_tbl (str,n,f) values (:s1:s2 ,:s3:s4 ,:s5:s6 ) returning n into :b2:b3 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -220,7 +220,7 @@ Iterations: 1 (of 1)
       Value: |13|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 17, type UPDATE (5), line 161, #para 1 (in 1) (offset 369)   (foff: 0)
+stmt # 17, type UPDATE (5), line 183, #para 1 (in 1) (offset 369)   (foff: 0)
 SQL: update syn_tbl  set n=66 where str=:b0
 Iterations: 1 (of 1)
   Iteration: 0
@@ -237,7 +237,7 @@ Iterations: 1 (of 1)
       Value: |FUU|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 18, type DELETE (2), line 171, #para 1 (in 1) (offset 388)   (foff: 0)
+stmt # 18, type DELETE (2), line 193, #para 1 (in 1) (offset 388)   (foff: 0)
 SQL: delete  from syn_tbl  where str=:b0
 Iterations: 1 (of 1)
   Iteration: 0
@@ -254,14 +254,14 @@ Iterations: 1 (of 1)
       Value: |WORLD|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 19, type COMMIT (29), line 201, #para 0 (in 0) (offset 407)   (foff: 0)
+stmt # 19, type COMMIT (29), line 223, #para 0 (in 0) (offset 407)   (foff: 0)
 SQL: COMMIT
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 20, type INSERT (3), line 204, #para 2 (in 2) (offset 422)   (foff: 0)
+stmt # 20, type INSERT (3), line 226, #para 2 (in 2) (offset 422)   (foff: 0)
 SQL: insert into example_tbl (str,n) values (:s1:s2 ,:s3:s4 )
 Iterations: 2 (of 2)
   Iteration: 0
@@ -298,14 +298,14 @@ Iterations: 2 (of 2)
       Value: |1|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 21, type ROLLBACK (31), line 207, #para 0 (in 0) (offset 445)   (foff: 0)
+stmt # 21, type ROLLBACK (31), line 229, #para 0 (in 0) (offset 445)   (foff: 0)
 SQL: ROLLBACK
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 22, type INSERT (3), line 211, #para 2 (in 2) (offset 460)   (foff: 0)
+stmt # 22, type INSERT (3), line 233, #para 2 (in 2) (offset 460)   (foff: 0)
 SQL: insert into example_tbl (str,n) values (:s1:s2 ,:s3:s4 )
 Iterations: 4 (of 4)
   Iteration: 0
@@ -370,7 +370,7 @@ Iterations: 4 (of 4)
       Value: |9|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 23, type INSERT (3), line 252, #para 3 (in 2) (offset 483)   (foff: 0)
+stmt # 23, type INSERT (3), line 274, #para 3 (in 2) (offset 483)   (foff: 0)
 SQL: insert into example_tbl (str,n) values (:s1:s2 ,:s3:s4 ) returning n into :s5:s6  
 Iterations: 4 (of 4)
   Iteration: 0
@@ -447,7 +447,7 @@ Iterations: 4 (of 4)
       Value: |9|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 24, type INSERT (3), line 274, #para 3 (in 2) (offset 510)   (foff: 0)
+stmt # 24, type INSERT (3), line 296, #para 3 (in 2) (offset 510)   (foff: 0)
 SQL: insert into example_tbl (str,n) values (:b0:b1,:b2:b3) returning (n+1) into :b4:b5 
 Iterations: 4 (of 4)
   Iteration: 0
@@ -524,7 +524,7 @@ Iterations: 4 (of 4)
       Value: |10|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 1, type SELECT (4), line 41, #para 2 (in 1) (offset 5)   (foff: 0)
+stmt # 1, type SELECT (4), line 63, #para 2 (in 1) (offset 5)   (foff: 0)
 SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -544,7 +544,7 @@ Iterations: 1 (of 1)
       Value: |2013-06-12 11:58:23            |
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 2, type SELECT (4), line 47, #para 2 (in 1) (offset 28)   (foff: 0)
+stmt # 2, type SELECT (4), line 69, #para 2 (in 1) (offset 28)   (foff: 0)
 SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -564,7 +564,7 @@ Iterations: 1 (of 1)
       Value: ||
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 3, type SELECT (4), line 54, #para 2 (in 1) (offset 51)   (foff: 0)
+stmt # 3, type SELECT (4), line 76, #para 2 (in 1) (offset 51)   (foff: 0)
 SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -584,7 +584,7 @@ Iterations: 1 (of 1)
       Value: |2013-06-12 11:58:23|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 4, type SELECT (4), line 59, #para 2 (in 1) (offset 74)   (foff: 0)
+stmt # 4, type SELECT (4), line 81, #para 2 (in 1) (offset 74)   (foff: 0)
 SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -604,7 +604,7 @@ Iterations: 1 (of 1)
       Value: |2013-06-12 11:58:23| (19)
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 5, type SELECT (4), line 66, #para 2 (in 1) (offset 97)   (foff: 0)
+stmt # 5, type SELECT (4), line 88, #para 2 (in 1) (offset 97)   (foff: 0)
 SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') into :b1  from dual 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -624,7 +624,7 @@ Iterations: 1 (of 1)
       Value: |2013-06-12 11:58:23|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 6, type SELECT (4), line 73, #para 3 (in 2) (offset 120)   (foff: 0)
+stmt # 6, type SELECT (4), line 95, #para 3 (in 2) (offset 120)   (foff: 0)
 SQL: select to_char(to_date(:b0,'YYYY-MM-DD HH24:MI:SS'),:b1) into :b2  from dual 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -650,7 +650,7 @@ Iterations: 1 (of 1)
       Value: |2013-06-12                     |
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 25, type OPEN cursor (9), line 286, #para 1 (in 1) (offset 537)   (foff: 0)
+stmt # 25, type OPEN cursor (9), line 308, #para 1 (in 1) (offset 537)   (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 SQL: select str ,n  from example_tbl where n<:b0 order by n            
 Iterations: 1 (of 1)
@@ -668,7 +668,7 @@ Iterations: 1 (of 1)
       Value: |5|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+stmt # 25, type FETCH (13), line 314, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -685,7 +685,7 @@ Iterations: 1 (of 1)
       Value: |0|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+stmt # 25, type FETCH (13), line 314, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -702,7 +702,7 @@ Iterations: 1 (of 1)
       Value: |0|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+stmt # 25, type FETCH (13), line 314, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -719,7 +719,7 @@ Iterations: 1 (of 1)
       Value: |0|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+stmt # 25, type FETCH (13), line 314, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -736,7 +736,7 @@ Iterations: 1 (of 1)
       Value: |1|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+stmt # 25, type FETCH (13), line 314, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -753,7 +753,7 @@ Iterations: 1 (of 1)
       Value: |1|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+stmt # 25, type FETCH (13), line 314, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -770,7 +770,7 @@ Iterations: 1 (of 1)
       Value: |4|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 25, type FETCH (13), line 292, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
+stmt # 25, type FETCH (13), line 314, #para 2 (in 0) (offset 556)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -788,13 +788,13 @@ Iterations: 1 (of 1)
       Value: |NULL|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 25, type CLOSE (15), line 298, #para 0 (in 0) (offset 579)   (foff: 0)
+stmt # 25, type CLOSE (15), line 320, #para 0 (in 0) (offset 579)   (foff: 0)
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 26, type OPEN cursor (9), line 309, #para 1 (in 1) (offset 594) SCROLL  (foff: 0)
+stmt # 26, type OPEN cursor (9), line 331, #para 1 (in 1) (offset 594) SCROLL  (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 SQL: select str ,n  from example_tbl where n<:b0 order by n            
 Iterations: 1 (of 1)
@@ -812,7 +812,7 @@ Iterations: 1 (of 1)
       Value: |5|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 26, type FETCH (13), line 315, #para 2 (in 0) (offset 613)  FETCH_LAST (foff: 0)
+stmt # 26, type FETCH (13), line 337, #para 2 (in 0) (offset 613)  FETCH_LAST (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -829,7 +829,7 @@ Iterations: 1 (of 1)
       Value: |4|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 26, type FETCH (13), line 318, #para 2 (in 0) (offset 636)  FETCH_FIRST (foff: 0)
+stmt # 26, type FETCH (13), line 340, #para 2 (in 0) (offset 636)  FETCH_FIRST (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -846,7 +846,7 @@ Iterations: 1 (of 1)
       Value: |0|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 26, type FETCH (13), line 321, #para 2 (in 0) (offset 659)  FETCH_ABSOLUTE (foff: 3)
+stmt # 26, type FETCH (13), line 343, #para 2 (in 0) (offset 659)  FETCH_ABSOLUTE (foff: 3)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -863,7 +863,7 @@ Iterations: 1 (of 1)
       Value: |0|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 26, type FETCH (13), line 324, #para 2 (in 0) (offset 682)  FETCH_RELATIVE (foff: 2)
+stmt # 26, type FETCH (13), line 346, #para 2 (in 0) (offset 682)  FETCH_RELATIVE (foff: 2)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -880,7 +880,7 @@ Iterations: 1 (of 1)
       Value: |1|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 26, type FETCH (13), line 327, #para 2 (in 0) (offset 705)  FETCH_NEXT (foff: 0)
+stmt # 26, type FETCH (13), line 349, #para 2 (in 0) (offset 705)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -897,7 +897,7 @@ Iterations: 1 (of 1)
       Value: |4|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 26, type FETCH (13), line 330, #para 2 (in 0) (offset 728)  FETCH_PRIOR (foff: 0)
+stmt # 26, type FETCH (13), line 352, #para 2 (in 0) (offset 728)  FETCH_PRIOR (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -914,7 +914,7 @@ Iterations: 1 (of 1)
       Value: |1|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 26, type FETCH (13), line 333, #para 2 (in 0) (offset 751)  FETCH_CURRENT (foff: 0)
+stmt # 26, type FETCH (13), line 355, #para 2 (in 0) (offset 751)  FETCH_CURRENT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 1)
   Iteration: 0
@@ -931,13 +931,13 @@ Iterations: 1 (of 1)
       Value: |1|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 26, type CLOSE (15), line 337, #para 0 (in 0) (offset 774)   (foff: 0)
+stmt # 26, type CLOSE (15), line 359, #para 0 (in 0) (offset 774)   (foff: 0)
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 27, type SELECT (4), line 352, #para 3 (in 1) (offset 789)   (foff: 0)
+stmt # 27, type SELECT (4), line 374, #para 3 (in 1) (offset 789)   (foff: 0)
 SQL: select str ,n into :s1:s2 ,:s3:s4   from example_tbl where n<:b2 order by n 
 Iterations: 1 (of 512)
   Iteration: 0
@@ -996,7 +996,7 @@ Iterations: 6 (of 512)
       Value: |NULL|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 28, type OPEN cursor (9), line 378, #para 1 (in 1) (offset 816)   (foff: 0)
+stmt # 28, type OPEN cursor (9), line 400, #para 1 (in 1) (offset 816)   (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 SQL: select str ,n  from example_tbl where n<:b0 order by n            
 Iterations: 1 (of 1)
@@ -1014,7 +1014,7 @@ Iterations: 1 (of 1)
       Value: |6|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 28, type FETCH (13), line 384, #para 2 (in 0) (offset 835)  FETCH_NEXT (foff: 0)
+stmt # 28, type FETCH (13), line 406, #para 2 (in 0) (offset 835)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 4)
   Iteration: 0
@@ -1052,7 +1052,7 @@ Iterations: 4 (of 4)
       Value: |1|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 28, type FETCH (13), line 384, #para 2 (in 0) (offset 835)  FETCH_NEXT (foff: 0)
+stmt # 28, type FETCH (13), line 406, #para 2 (in 0) (offset 835)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 4)
   Iteration: 0
@@ -1077,13 +1077,13 @@ Iterations: 2 (of 4)
       Value: |NULL|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 28, type CLOSE (15), line 397, #para 0 (in 0) (offset 858)   (foff: 0)
+stmt # 28, type CLOSE (15), line 419, #para 0 (in 0) (offset 858)   (foff: 0)
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 29, type EXECUTE IMMEDIATE (24), line 408, #para 1 (in 1) (offset 873)   (foff: 0)
+stmt # 29, type EXECUTE IMMEDIATE (24), line 430, #para 1 (in 1) (offset 873)   (foff: 0)
 Iterations: 1 (of 1)
   Iteration: 0
     IN paramter (a=0)
@@ -1100,7 +1100,7 @@ Iterations: 1 (of 1)
       Value: |DELETE FROM example_tbl WHERE n = 2048|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 30, type PREPARE (17), line 418, #para 1 (in 1) (offset 892)   (foff: 0)
+stmt # 30, type PREPARE (17), line 440, #para 1 (in 1) (offset 892)   (foff: 0)
 Iterations: 1 (of 1)
   Iteration: 0
     IN paramter (a=0)
@@ -1116,7 +1116,7 @@ Iterations: 1 (of 1)
       Value: |DELETE FROM example_tbl WHERE n = :n|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 30, type EXECUTE (21), line 420, #para 1 (in 1) (offset 911)   (foff: 0)
+stmt # 30, type EXECUTE (21), line 442, #para 1 (in 1) (offset 911)   (foff: 0)
 Iterations: 1 (of 1)
   Iteration: 0
     IN paramter (a=0)
@@ -1132,7 +1132,7 @@ Iterations: 1 (of 1)
       Value: |4|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 31, type PREPARE (17), line 436, #para 1 (in 1) (offset 930)   (foff: 0)
+stmt # 31, type PREPARE (17), line 458, #para 1 (in 1) (offset 930)   (foff: 0)
 Iterations: 1 (of 1)
   Iteration: 0
     IN paramter (a=0)
@@ -1148,7 +1148,7 @@ Iterations: 1 (of 1)
       Value: |SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 31, type OPEN cursor dyn (45), line 440, #para 1 (in 1) (offset 949)   (foff: 0)
+stmt # 31, type OPEN cursor dyn (45), line 462, #para 1 (in 1) (offset 949)   (foff: 0)
 Iterations: 1 (of 1)
   Iteration: 0
     IN paramter (a=0)
@@ -1164,7 +1164,7 @@ Iterations: 1 (of 1)
       Value: |6|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 31, type FETCH (13), line 446, #para 2 (in 0) (offset 968)  FETCH_NEXT (foff: 0)
+stmt # 31, type FETCH (13), line 468, #para 2 (in 0) (offset 968)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 4)
   Iteration: 0
@@ -1202,7 +1202,7 @@ Iterations: 4 (of 4)
       Value: |1|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 31, type FETCH (13), line 446, #para 2 (in 0) (offset 968)  FETCH_NEXT (foff: 0)
+stmt # 31, type FETCH (13), line 468, #para 2 (in 0) (offset 968)  FETCH_NEXT (foff: 0)
 PREFETCH=1 (# of prefetched rows)
 Iterations: 1 (of 4)
   Iteration: 0
@@ -1220,13 +1220,13 @@ Iterations: 1 (of 4)
       Value: |NULL|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 31, type CLOSE (15), line 460, #para 0 (in 0) (offset 991)   (foff: 0)
+stmt # 31, type CLOSE (15), line 482, #para 0 (in 0) (offset 991)   (foff: 0)
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 0
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 32, type PREPARE (17), line 492, #para 1 (in 1) (offset 1006)   (foff: 0)
+stmt # 32, type PREPARE (17), line 514, #para 1 (in 1) (offset 1006)   (foff: 0)
 Iterations: 1 (of 1)
   Iteration: 0
     IN paramter (a=0)
@@ -1242,7 +1242,7 @@ Iterations: 1 (of 1)
       Value: |INSERT INTO example_tbl(str, n) VALUES (:x:a, :y:b)|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 32, type EXECUTE (21), line 494, #para 2 (in 2) (offset 1025)   (foff: 0)
+stmt # 32, type EXECUTE (21), line 516, #para 2 (in 2) (offset 1025)   (foff: 0)
 Iterations: 8 (of 8)
   Iteration: 0
     IN paramter (a=0)
@@ -1362,7 +1362,7 @@ Iterations: 8 (of 8)
       Value: |57|
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 33, type CALL (122), line 503, #para 2 (in 2) (offset 1048)   (foff: 0)
+stmt # 33, type CALL (122), line 525, #para 2 (in 2) (offset 1048)   (foff: 0)
 SQL: call DBMS_METADATA.GET_DDL('TABLE',:b0) into :b1 
 Iterations: 1 (of 1)
   Iteration: 0
@@ -1395,7 +1395,7 @@ Iterations: 1 (of 1)
  |
 ---------------------------------------------------------------------------
 ===========================================================================
-stmt # 3, type COMMIT RELEASE (30), line 63, #para 0 (in 0) (offset 71)   (foff: 0)
+stmt # 3, type COMMIT RELEASE (30), line 85, #para 0 (in 0) (offset 71)   (foff: 0)
 SQL: COMMIT WORK RELEASE
 ---------------------------------------------------------------------------
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
