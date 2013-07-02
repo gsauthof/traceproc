@@ -1251,6 +1251,7 @@ enum Binary_Option {
   OPT_TIME,
   OPT_OCI,
   OPT_LEAK,
+  OPT_IGN_EXIT,
   WRAP_OPTION_SIZE
 };
 typedef enum Binary_Option Binary_Option;
@@ -1267,7 +1268,8 @@ static const char *option_str[] = {
   "frame",
   "time",
   "oci",
-  "leak"
+  "leak",
+  "ign_exit"
 };
 
 struct Options {
@@ -1657,21 +1659,41 @@ static int pp_sql_after(const sqlexd *d, Statement *stmt,
 struct Fn_Table {
   void (*sqlcxt)(void**, unsigned int*, sqlexd *, const sqlcxp*);
   void (*sqlorat)(void **, unsigned int *, void *);
+  void (*_exit)(int status);
+  void (*_Exit)(int status);
+  //void (*exit)(int status);
 };
 typedef struct Fn_Table Fn_Table;
 static Fn_Table fn_table = {0};
 
 INTERCEPT_SETUP(sqlcxt)
 INTERCEPT_SETUP(sqlorat)
+INTERCEPT_SETUP(_exit)
+INTERCEPT_SETUP(_Exit)
+//INTERCEPT_SETUP(exit)
+
+static void wrap_exit(int status)
+{
+  exit(status);
+  /*
+  if (fn_table.exit)
+    (*fn_table.exit)(status);
+  else
+    exit(status);
+   */
+}
 
 static void setup_fns()
 {
   int r = 0;
   r += setup_sqlcxt();
   r += setup_sqlorat();
+  r += setup__exit();
+  r += setup__Exit();
+  //r += setup_exit();
   if (r) {
     fprintf(stderr, "Exiting because of previous dlsym() errors.\n");
-    exit(23);
+    wrap_exit(23);
   }
 }
 
@@ -1732,6 +1754,41 @@ void sqlorat(void **v, unsigned int *sqlctx_, void *oraca_)
   }
 }
 
+/*
+void exit(int status)
+{
+  (*fn_table.exit)(status);
+  abort();
+}
+*/
+
+/* Because the flushing of IO-Buffers on the executation
+ * of destructor function on _exit() is implementation
+ * defined one might want to use -ign_exit in special
+ * cases.
+ */
+void _exit(int status)
+{
+  if (options.binary[OPT_IGN_EXIT]){
+    //(*fn_table.exit)(status);
+    exit(status);
+  } else
+    (*fn_table._exit)(status);
+  // to remove Warning
+  abort();
+}
+
+void _Exit(int status)
+{
+  if (options.binary[OPT_IGN_EXIT])
+    //(*fn_table.exit)(status);
+    exit(status);
+  else
+    (*fn_table._Exit)(status);
+  // to remove Warning
+  abort();
+}
+
 // not necessary anymore - Solaris CC 12.3 also supports the attribute-syntax
 // for constructor/destructor declarations
 //#if defined(__sun)
@@ -1759,6 +1816,7 @@ static void help()
       "  -orat        - intercept sqlorat calls (default: yes)\n"
       "  -frame       - print 'starting sqlctx()/done' msg (default: no)\n"
       "  -time        - print timestamps (default: yes)\n"
+      "  -ign_exit    - map _exit()/_Exit() to exit() (default: no)\n"
       "\n"
       "\n"
       "You can prefix each binary option with -no, e.g. -nostats,\n"
@@ -1795,7 +1853,7 @@ static void interpret_options()
     if (!state.file) {
       fprintf(stderr, "Could not open: %s => %s\n",
           options.filename, strerror(errno));
-      exit(2);
+      wrap_exit(2);
     }
   } else {
     state.file = stderr;
@@ -1836,7 +1894,7 @@ static void print_startup()
     int ret = tprintf("Libtraceproc is active.\n");
     if (ret <= 0) {
       fprintf(stderr, "libtraceproc stdio failed");
-      exit(3);
+      wrap_exit(3);
     }
     const char *e = getenv("TRACEPROC_OPTIONS");
     tprintf("TRACEPROC_OPTIONS='%s'\n", e ? e : "");
@@ -1849,7 +1907,7 @@ static void __attribute__((constructor)) wrap_startup()
   int ret_p = parse_env();
   if (options.binary[OPT_HELP] || ret_p) {
     help();
-    exit(1);
+    wrap_exit(1);
   }
   interpret_options();
   setup_fns();

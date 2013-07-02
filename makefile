@@ -279,6 +279,8 @@ example/occi/fetch: example/occi/fetch.o ora_util.o
 
 TEMP +=  example/occi/fetch.o example/occi/fetch
 
+TEMP += example/exit
+
 ###########################################################################
 # Cleanup
 ###########################################################################
