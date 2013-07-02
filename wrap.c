@@ -1588,6 +1588,12 @@ static int pp_sql_before(const sqlexd *d, Statement *stmt, unsigned callback_nr)
 
   traceproc_trap(stmt->type_str, stmt->text, true, true);
 
+  // printing a FETCH statement before execution
+  // is not really useful
+  if (stmt->type == FETCH && options.binary[OPT_SQL])
+    return 0;
+
+
   if (state.callbacks[callback_nr].before_fn) {
     int ret = state.callbacks[callback_nr]
       .before_fn(stmt, state.callbacks[callback_nr].user_ptr);
