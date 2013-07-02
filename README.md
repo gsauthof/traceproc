@@ -164,6 +164,19 @@ The DB related tests expect the environment variables
 ORACLE_USER, ORACLE_PASS, ORACLE_SID to be set and a writable
 user schema for temporary tables.
 
+### Specify uncommon options
+
+For example for Solaris 10 and Solaris Studio 12.3:
+
+    $ make CC=cc CXX=CC SED=gsed DIFF=gdiff CFLAGS="-g -m64 -xc99" \
+        LDFLAGS64="-m64" \
+        CFLAGS_PTHREAD="" LDFLAGS_PTHREAD="" \
+        CPPFLAGS_CK=-I/usr/local/include \
+        LDFLAGS_CK="-L/usr/local/lib -R/usr/local/lib"
+
+Depending on where the unittesting library [check][check] is installed
+you have adjust the last line.
+
 ## Setup
 
 To trace anything you have to specify the shared-library
@@ -175,19 +188,21 @@ variable. `-help` prints all available options.
 
 ## Environment
 
-A somehow recent C Compiler that supports some C99 features and a
-few [GCC][gcc]-style attributes should be fine. The makefile uses
-[GNU make][gmake] features. GNU sed is needed for the module
-tests.
+A somehow recent C Compiler that supports some C99 features and a few
+[GCC][gcc]-style attributes should be fine. The makefile uses
+[GNU make][gmake] features. GNU sed and GNU diff are needed for the
+module tests.
 
 Tested with:
 
 - CentOS 6.4, Oracle 11g Standard Edition 11.2.0.1, GCC 4.4.7,
   GNU make 3.81
+- Solaris 10, Oracle 11g Enterprise Edition 11.2.0.3,
+  Solaris Studio 12.3 (C compiler), GNU make 3.81
 
-Should also run on Solaris (with Solaris Studio >= 12.3 or an GCC
-compiler and GNU make).
+Should also work with GCC on Solaris.
 
+The unittests need [libcheck][check].
 
 ## Advanced features
 
@@ -219,4 +234,5 @@ Don't hesitate to send me comments and feedback via email:
 [gmake]: http://www.gnu.org/software/make/
 [gcc]:   http://gcc.gnu.org/
 [gpl]:   http://www.gnu.org/licenses/gpl.html
+[check]: http://check.sourceforge.net/
 

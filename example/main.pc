@@ -32,8 +32,8 @@ EXEC SQL INCLUDE ORACA;
 #include <signal.h>
 
 #include "ret_check.h"
-
 #include "proc_util.h"
+#include "ora_util.h"
 
 static void pp_sigaction(int sig, struct sigaction *act)
 {

@@ -2,11 +2,21 @@
 
 .PHONY: all
 
-all: examples libtraceproc.so parsesql unittest/main
+all: examples libtraceproc.so unittest/main
 
 CPPFLAGS = -I$(ORACLE_HOME)/precomp/public
 CFLAGS = -g -Wall -Wno-missing-braces -Wno-unused-variable -std=gnu99
 CXXFLAGS = -g -Wall -Wno-missing-braces
+
+#LDFLAGS64 =
+
+CFLAGS_PTHREAD = -pthread
+LDFLAGS_PTHREAD = -pthread
+
+#CPPFLAGS_CK =
+#LDFLAGS_CK =
+
+LDFLAGS = $(LDFLAGS64)
 
 SHAREDFLAGS = -fpic
 
@@ -37,7 +47,7 @@ OBJ_LIBTRACEPROC = wrap.po parsesql.po timespec.po prettyprint.po trace.po ocitr
 
 LINK.so = $(CC) -shared $(SHAREDFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-libtraceproc.so: LDFLAGS =
+libtraceproc.so: LDFLAGS = $(LDFLAGS64)
 libtraceproc.so: LDLIBS = -ldl -lrt
 
 libtraceproc.so: $(OBJ_LIBTRACEPROC)
@@ -46,7 +56,7 @@ libtraceproc.so: $(OBJ_LIBTRACEPROC)
 TEMP += $(OBJ_LIBTRACEPROC) libtraceproc.so
 
 libtraceproc_dummy.so: LDLIBS =
-libtraceproc_dummy.so: LDFLAGS =
+libtraceproc_dummy.so: LDFLAGS = $(LDFLAGS64)
 
 libtraceproc_dummy.so: callback_dummy.po
 	$(LINK.so)
@@ -70,16 +80,18 @@ OBJ_UNITTEST += timespec.o \
 		parsesql.o \
 		trace.o
 
-unittest/%.o: CPPFLAGS += -I.
+unittest/%.o: CPPFLAGS += -I. $(CPPFLAGS_CK)
 
-unittest/test_trace.o: CXXFLAGS += -pthread
+unittest/%: LDFLAGS += $(LDFLAGS_CK)
+
+unittest/test_trace.o: CXXFLAGS += $(CFLAGS_PTHREAD)
 
 unittest/main: LDLIBS += -lcheck
 
 # for trace.o
-unittest/main: LDLIBS += -lrt
+unittest/main: LDLIBS += -lrt -lm
 
-unittest/main: LDFLAGS += -pthread
+unittest/main: LDFLAGS += $(LDFLAGS_PTHREAD)
 
 unittest/main: $(OBJ_UNITTEST)
 
@@ -101,7 +113,7 @@ unittest/basic.o: CPPFLAGS += -Iunittest
 unittest/proc: $(OBJ_PROC_UNITTEST) libtraceproc_dummy.so libtraceproc.so
 	$(LINK.o) $(filter %.o,$^) $(LDLIBS) -o $@
 
-unittest/proc: LDFLAGS = -L$(PWD) -Wl,-R,$(PWD)
+unittest/proc: LDFLAGS = -L$(PWD) -Wl,-R,$(PWD) $(LDFLAGS64) $(LDFLAGS_CK)
 #unittest/proc: LDLIBS += -ltraceproc
 
 unittest/proc: LDFLAGS += -L$(ORACLE_HOME)/lib -Xlinker -R$(ORACLE_HOME)/lib
@@ -193,7 +205,7 @@ examples: example/main example/massinsert example/prefetch example/signal
 
 
 #prefetch massinsert example: 
-example/occi/% example/otl/% example/oci/% example/%: LDFLAGS = -L$(ORACLE_HOME)/lib -Xlinker -R$(ORACLE_HOME)/lib
+example/occi/% example/otl/% example/oci/% example/%: LDFLAGS = $(LDFLAGS64) -L$(ORACLE_HOME)/lib -Xlinker -R$(ORACLE_HOME)/lib
 
 example/occi/% example/otl/% example/oci/% example/%: LDLIBS = -lclntsh
 
@@ -201,6 +213,8 @@ example/occi/%.o example/otl/%.o example/oci/%.o example/%.o: CPPFLAGS += -I.
 
 example/occi/%.o ocitrace.po example/otl/%.o oci_util.o example/oci/%.o: CPPFLAGS += -I$(ORACLE_HOME)/rdbms/public
 
+
+example/main: PROC_SQLCHECK = syntax
 
 example/main: example/main.o proc_util.o ora_util.o 
 
@@ -219,6 +233,8 @@ example/massinsert_impl: example/massinsert
 	cp $< $@
 
 TEMP += example/massinsert_impl
+
+example/prefetch: PROC_SQLCHECK = syntax
 
 example/prefetch: example/prefetch.o proc_util.o ora_util.o 
 

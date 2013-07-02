@@ -116,7 +116,9 @@ Sig_Str sig_str[] =
   { SIGXFSZ, "SIGXFSZ" },
   { SIGWINCH, "SIGWINCH" },
   { SIGPWR, "SIGPWR" },
+#if !defined(__sun)
   { SIGSTKFLT, "SIGSTKFLT" },
+#endif
   { 0, 0 }
 };
 
