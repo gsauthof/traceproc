@@ -1757,7 +1757,7 @@ static void help()
       "  -before      - call pretty printers before (default: yes)\n"
       "  -after       - call pretty printers after (default: yes)\n"
       "  -orat        - intercept sqlorat calls (default: yes)\n"
-      "  -frame       - print 'starting sqlctx()/done' msg (default: enabled by -gory)\n"
+      "  -frame       - print 'starting sqlctx()/done' msg (default: no)\n"
       "  -time        - print timestamps (default: yes)\n"
       "\n"
       "\n"
@@ -1770,11 +1770,8 @@ static void help()
 
 static SQL_PP_State sql_pp_state = {0};
 
-
-
-static void __attribute__((constructor)) wrap_startup() 
+static void init_default_options()
 {
-  // default values
   options.binary[OPT_INTERCEPT] = false;
   options.binary[OPT_STATS] = true;
   options.binary[OPT_GORY] = false;
@@ -1784,13 +1781,10 @@ static void __attribute__((constructor)) wrap_startup()
   options.binary[OPT_TIME] = true;
   options.binary[OPT_OCI] = false;
   options.binary[OPT_LEAK] = true;
-  if (options.binary[OPT_GORY])
-    options.binary[OPT_FRAME] = true;
-  int ret_p = parse_env();
-  if (options.binary[OPT_HELP] || ret_p) {
-    help();
-    exit(1);
-  }
+}
+
+static void interpret_options()
+{
   if (!options.binary[OPT_TIME])
     *options.time_format = 0;
   if (*options.time_format) {
@@ -1806,15 +1800,10 @@ static void __attribute__((constructor)) wrap_startup()
   } else {
     state.file = stderr;
   }
-  setup_fns();
-  ocitrace_setup(options.binary[OPT_OCI],
-      options.binary[OPT_GORY], options.binary[OPT_SQL],
-      options.binary[OPT_STATS],
-      options.binary[OPT_LEAK]);
-  int ret = stats_init(&stats, WRAP_STATEMENT_TYPE_SIZE, FN_SIZE);
-  IFTRUEEXIT(ret, 0, -1);
+}
 
-  trace_set_file(state.file);
+static void setup_callbacks()
+{
   if (options.binary[OPT_GORY]) {
     Traceproc_Callbacks callbacks = {
         .parameter_fn = pp_para_gory,
@@ -1839,12 +1828,10 @@ static void __attribute__((constructor)) wrap_startup()
     unsigned id = 0;
     traceproc_register_callbacks(&callbacks, &id);
   }
+}
 
-  if (options.binary[OPT_STATS]) {
-    ret = clock_gettime(WRAP_CLOCK_ID, &stats.prog_start);
-    IFERRNOEXIT(ret, 0, 10);
-  }
-
+static void print_startup()
+{
   if (options.binary[OPT_INTERCEPT]) {
     int ret = tprintf("Libtraceproc is active.\n");
     if (ret <= 0) {
@@ -1854,6 +1841,35 @@ static void __attribute__((constructor)) wrap_startup()
     const char *e = getenv("TRACEPROC_OPTIONS");
     tprintf("TRACEPROC_OPTIONS='%s'\n", e ? e : "");
   }
+}
+
+static void __attribute__((constructor)) wrap_startup() 
+{
+  init_default_options();
+  int ret_p = parse_env();
+  if (options.binary[OPT_HELP] || ret_p) {
+    help();
+    exit(1);
+  }
+  interpret_options();
+  setup_fns();
+  ocitrace_setup(options.binary[OPT_OCI],
+      options.binary[OPT_GORY], options.binary[OPT_SQL],
+      options.binary[OPT_STATS],
+      options.binary[OPT_LEAK]);
+  int ret = stats_init(&stats, WRAP_STATEMENT_TYPE_SIZE, FN_SIZE);
+  IFTRUEEXIT(ret, 0, -1);
+
+  trace_set_file(state.file);
+
+  setup_callbacks();
+
+  if (options.binary[OPT_STATS]) {
+    ret = clock_gettime(WRAP_CLOCK_ID, &stats.prog_start);
+    IFERRNOEXIT(ret, 0, 10);
+  }
+
+  print_startup();
 }
 
 static void __attribute__((destructor)) wrap_shutdown()
