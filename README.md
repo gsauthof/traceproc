@@ -216,6 +216,22 @@ The unittests need [libcheck][check].
   functions/macros that could be useful for general purpose DB
   related programs
 
+## Pitfalls
+
+When tracing and  _exit() (i.e. not exit()) is called the
+execution of the libtraceproc destructor function and flushing of
+IO-buffers is implementation defined.
+
+Most likely it is not executed and buffers are not flushed - in
+that case stats are not printed on exit and the logfile (when
+-flogfile is specied) does not contain the last content buffer.
+
+If you know what you are doing you can use the -ign_exit option
+to map _exit()/_Exit() calls to exit().
+
+Usually, this should not be an issue, because most sane programs
+exit via return statement from main() or call exit().
+
 ## License
 
 [GPLv3+][gpl]
