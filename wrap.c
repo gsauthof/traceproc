@@ -1649,10 +1649,11 @@ static int pp_sql_after(const sqlexd *d, Statement *stmt,
           state.callbacks[callback_nr].user_ptr);
   }
 
-  // now done in pp_para
-  //if (!stmt->errorcode || stmt->errorcode == 1403 || stmt->errorcode == 100) {
-    pp_para(d, false, stmt, callback_nr);
-  //}
+  // don't print (possibly) tons of NULL fetch results
+  if (stmt->type == FETCH && (stmt->errorcode == 1403 || stmt->errorcode == 100))
+    return 0;
+
+  pp_para(d, false, stmt, callback_nr);
 
   if (state.callbacks[callback_nr].after_end_fn) {
     int ret = state.callbacks[callback_nr]

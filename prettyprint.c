@@ -214,6 +214,11 @@ int pp_sql(const Statement *stmt, void *user_ptr)
   }
   s->tokens_pos = 0;
   SQL_Token *i = s->tokens + s->tokens_pos;
+
+  // don't print (possibly) tons of NULL fetch results
+  if (stmt->type == FETCH && (stmt->errorcode == 1403 || stmt->errorcode == 100))
+    return 0;
+
   if (s->tokens_pos < s->tokens_size && i->begin && !i->host_var) {
     tprintf("%.*s", (int) (i->end - i->begin), i->begin);
     ++s->tokens_pos;

@@ -778,15 +778,6 @@ Iterations: 1 (of 1)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 1403, ORA-01403: no data found (select str ,n  from example_tbl where n<:b0 order by n            )
 
-Iterations: 1 (of 1)
-  Iteration: 0
-    OUT paramter (a=0)
-      Type: STRING (97), Length: 6, Size: 0, Ind -1
-      Value: |NULL|
-    OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 0, Ind -1
-      Value: |NULL|
----------------------------------------------------------------------------
 ===========================================================================
 stmt # 25, type CLOSE (15), line 320, #para 0 (in 0) (offset 579)   (foff: 0)
 ---------------------------------------------------------------------------
@@ -1060,22 +1051,6 @@ Iterations: 1 (of 4)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 1403, ORA-01403: no data found (select str ,n  from example_tbl where n<:b0 order by n            )
 
-Iterations: 2 (of 4)
-  Iteration: 0
-    OUT paramter (a=0)
-      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
-      Value: |NULL|
-    OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 36, Ind -1
-      Value: |NULL|
-  Iteration: 1
-    OUT paramter (a=0)
-      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
-      Value: |NULL|
-    OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 36, Ind -1
-      Value: |NULL|
----------------------------------------------------------------------------
 ===========================================================================
 stmt # 28, type CLOSE (15), line 419, #para 0 (in 0) (offset 858)   (foff: 0)
 ---------------------------------------------------------------------------
@@ -1210,15 +1185,6 @@ Iterations: 1 (of 4)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 1403, ORA-01403: no data found (SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n)
 
-Iterations: 1 (of 4)
-  Iteration: 0
-    OUT paramter (a=0)
-      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
-      Value: |NULL|
-    OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 36, Ind -1
-      Value: |NULL|
----------------------------------------------------------------------------
 ===========================================================================
 stmt # 31, type CLOSE (15), line 482, #para 0 (in 0) (offset 991)   (foff: 0)
 ---------------------------------------------------------------------------
