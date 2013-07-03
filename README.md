@@ -195,9 +195,9 @@ module tests.
 
 Tested with:
 
-- CentOS 6.4, Oracle 11g Standard Edition 11.2.0.1, GCC 4.4.7,
+- CentOS 6.4 (x86_64), Oracle 11g Standard Edition 11.2.0.1, GCC 4.4.7,
   GNU make 3.81
-- Solaris 10, Oracle 11g Enterprise Edition 11.2.0.3,
+- Solaris 10 (SPARC), Oracle 11g Enterprise Edition 11.2.0.3,
   Solaris Studio 12.3 (C compiler), GNU make 3.81
 
 Should also work with GCC on Solaris.
@@ -218,6 +218,8 @@ The unittests need [libcheck][check].
 
 ## Pitfalls
 
+### _exit()
+
 When tracing and  _exit() (i.e. not exit()) is called the
 execution of the libtraceproc destructor function and flushing of
 IO-buffers is implementation defined.
@@ -231,6 +233,14 @@ to map _exit()/_Exit() calls to exit().
 
 Usually, this should not be an issue, because most sane programs
 exit via return statement from main() or call exit().
+
+### mixed 32 and 64 bit environment
+
+Using LD_PRELOAD in a mixed 32/64 bit environment may yield
+dynamic linking errors when fork()ing and exec()ing a 32 (or 64)
+bit binary from a 64 (or 32) bit parent process. Solaris provides
+LD_PRELOAD_32 and LD_PRELOAD_64 for that use case. Linux has the
+dynamic string token $LIB.
 
 ## License
 
