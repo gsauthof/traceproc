@@ -1,6 +1,6 @@
 libtraceproc - a library for tracing [Pro*C][proc] and [OCI][oci] calls
 
-It is implemented as shared library which intercepts Pro*C/OCI
+It is implemented as a shared library which intercepts Pro*C/OCI
 calls when preloaded. Since DB libraries like [OCCI][occi] and
 [OTL][otl] also use low-level OCI-calls, one get useful trace
 results there, too.

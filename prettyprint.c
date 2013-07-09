@@ -271,7 +271,7 @@ static int pp_para_sql_value(const Statement *stmt,
     bool before,
     void *user_ptr)
 {
-  char buffer[512] = {0};
+  char buffer[2048] = {0};
   if (p->indicator == -1) {
     tprintf("NULL");
   } else  {
@@ -279,7 +279,7 @@ static int pp_para_sql_value(const Statement *stmt,
     {
       case STRING :
         sql_quote_str((const char*)p->value, strlen((const char*)p->value),
-            buffer, 512);
+            buffer, 2048);
         tprintf("%s", buffer);
         break;
       case DOUBLE :
@@ -303,18 +303,18 @@ static int pp_para_sql_value(const Statement *stmt,
       case VARCHAR:
         {
           const varchar *v = p->value;
-          sql_quote_str((const char*)v->arr, (size_t)v->len, buffer, 512);
+          sql_quote_str((const char*)v->arr, (size_t)v->len, buffer, 2048);
           tprintf("%s", buffer);
         }
         break;
       case STRING0:
         sql_quote_str((const char*)p->value, strlen((const char*)p->value),
-            buffer, 512);
+            buffer, 2048);
         tprintf("%s", buffer);
         break;
       case CHAR:
         sql_quote_str((const char*)p->value, 1,
-            buffer, 512);
+            buffer, 2048);
         tprintf("%s", buffer);
         break;
       default:

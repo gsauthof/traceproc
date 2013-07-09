@@ -195,6 +195,12 @@ genmod: genmodsql genmodgory genmodoci
 
 testmod: testmodsql testmodgory testmodoci
 
+
+
+.PHONY: test
+
+test: testunit testmod
+
 ###########################################################################
 # Test programs
 ###########################################################################
