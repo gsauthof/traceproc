@@ -528,6 +528,30 @@ static int call()
   EXEC ORACLE OPTION (char_map=charz);
 }
 
+static int empty_sel()
+{
+  int x = 0;
+  EXEC SQL SELECT 0 INTO :x FROM DUAL WHERE 0=1;
+  if (sqlca.sqlcode != 1403)
+      IFSQLRET(0, -1);
+  return 0;
+}
+static int empty_arr()
+{
+  struct Row { char str[32]; int n; };
+  struct Row rows[512] = {0};
+  struct Ind { short a; short b; };
+  struct Ind inds[512] = {0};
+
+  int x = 6;
+  EXEC ORACLE OPTION (char_map=string);
+  EXEC SQL SELECT str, n INTO :rows:inds FROM example_tbl WHERE 1 = 0 ORDER BY n;
+  EXEC ORACLE OPTION (char_map=charz);
+  if (sqlca.sqlcode != 1403)
+    IFSQLRET(0, -1);
+  return 0;
+}
+
 int main(int argc, char **argv)
 {
   // silence unused warning:
@@ -590,6 +614,12 @@ int main(int argc, char **argv)
     IFTRUERET(ret, 0, 1);
 
     ret = call();
+    IFTRUERET(ret, 0, 1);
+
+    ret = empty_sel();
+    IFTRUERET(ret, 0, 1);
+
+    ret = empty_arr();
     IFTRUERET(ret, 0, 1);
 
     if (argc > 1) 

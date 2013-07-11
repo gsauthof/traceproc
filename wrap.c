@@ -1432,8 +1432,10 @@ static size_t determine_iterations(bool before, const Statement *stmt)
       if (before)
         iterations = 1;
       else {
-        // for single fetches
-        if (stmt->iterations == 1 && stmt->errorcode) {
+                // for single fetches
+        if (    (stmt->iterations == 1 && stmt->errorcode)
+                // for completely empty array fetches
+             || (!stmt->acc_fetched_rows) )  {
           iterations = 0;
         } else {
           size_t mod = stmt->acc_fetched_rows % stmt->iterations;
