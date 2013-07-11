@@ -449,6 +449,8 @@ select str ,n  from example_tbl where n<5 order by n            ;
 -- example/main.pc:314
 -- Pseudo-SQL: FETCH
 -- PREFETCH=1 (# of prefetched rows)
+( ;
+-- ---------------------------------------------------------------------------
 
 
 -- ###########################################################################
@@ -564,12 +566,12 @@ select str ,n into :s1:s2 ,:s3:s4   from example_tbl where n<6 order by n ;
 -- ===========================================================================
 -- After execution (errorcode: 1403, ORA-01403: no data found, select str ,n into :s1:s2 ,:s3:s4   from example_tbl where n<:b2 order):
 -- example/main.pc:374
-select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
-select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
-select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
-select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
-select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
-select str ,n into NULL ,NULL   from example_tbl where n<6 order by n ;
+select str ,n into 'a' ,0   from example_tbl where n<6 order by n ;
+select str ,n into 'a' ,0   from example_tbl where n<6 order by n ;
+select str ,n into 'a' ,0   from example_tbl where n<6 order by n ;
+select str ,n into 'b' ,1   from example_tbl where n<6 order by n ;
+select str ,n into 'b' ,1   from example_tbl where n<6 order by n ;
+select str ,n into 'c' ,4   from example_tbl where n<6 order by n ;
 -- ---------------------------------------------------------------------------
 
 
@@ -606,6 +608,9 @@ select str ,n  from example_tbl where n<6 order by n            ;
 -- example/main.pc:406
 -- Pseudo-SQL: FETCH
 -- PREFETCH=1 (# of prefetched rows)
+( 'b', 1 );
+( 'c', 4 );
+-- ---------------------------------------------------------------------------
 
 
 -- ###########################################################################
@@ -721,6 +726,8 @@ DELETE FROM example_tbl WHERE n = 4;
 -- example/main.pc:468
 -- Pseudo-SQL: FETCH
 -- PREFETCH=1 (# of prefetched rows)
+( 'b', 1 );
+-- ---------------------------------------------------------------------------
 
 
 -- ###########################################################################

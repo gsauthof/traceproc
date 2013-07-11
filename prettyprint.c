@@ -170,6 +170,7 @@ int pp_after_gory(const Statement *stmt,
   if (!stmt->errorcode || stmt->errorcode == 1403 || stmt->errorcode == 100) {
     tprintf("\n");
   }
+  //tprintf("Fetched rows: %zu\n", stmt->acc_fetched_rows);
   return 0;
 }
 
@@ -212,12 +213,10 @@ int pp_sql(const Statement *stmt, void *user_ptr)
     } else if (stmt->number_of_params)
       sql_pseudo_tokenize(stmt->number_of_params, &s->tokens, &s->tokens_size);
   }
+
   s->tokens_pos = 0;
   SQL_Token *i = s->tokens + s->tokens_pos;
 
-  // don't print (possibly) tons of NULL fetch results
-  if (stmt->type == FETCH && (stmt->errorcode == 1403 || stmt->errorcode == 100))
-    return 0;
 
   if (s->tokens_pos < s->tokens_size && i->begin && !i->host_var) {
     tprintf("%.*s", (int) (i->end - i->begin), i->begin);
@@ -333,7 +332,6 @@ int pp_para_sql(const Statement *stmt,
   // XXX do something special on after and select
 
   SQL_PP_State *s = user_ptr;
-
 
   if (!p->pos && p->iteration && s->tokens) {
     s->tokens_pos = 0;

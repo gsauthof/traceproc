@@ -1432,11 +1432,16 @@ static size_t determine_iterations(bool before, const Statement *stmt)
       if (before)
         iterations = 1;
       else {
-        size_t mod = stmt->acc_fetched_rows % stmt->iterations;
-        if (mod)
-          iterations = mod;
-        else
-          iterations = stmt->iterations;
+        // for single fetches
+        if (stmt->iterations == 1 && stmt->errorcode) {
+          iterations = 0;
+        } else {
+          size_t mod = stmt->acc_fetched_rows % stmt->iterations;
+          if (mod)
+            iterations = mod;
+          else
+            iterations = stmt->iterations;
+        }
       }
       break;
     default:
@@ -1500,8 +1505,8 @@ static int pp_para(const sqlexd *d, bool before,
 
       // don't print OUT-parameters on errors
       if (!before && p.direction == PARA_OUT
-            && !(!stmt->errorcode ) //|| stmt->errorcode == 1403 || stmt->errorcode == 100)
-            ) {
+          && stmt->errorcode != 0 && stmt->errorcode != 1403
+          && stmt->errorcode != 100) {
         p.indicator = -1;
       }
 
@@ -1648,10 +1653,6 @@ static int pp_sql_after(const sqlexd *d, Statement *stmt,
       .after_fn(stmt, s, state.last_oraca,
           state.callbacks[callback_nr].user_ptr);
   }
-
-  // don't print (possibly) tons of NULL fetch results
-  if (stmt->type == FETCH && (stmt->errorcode == 1403 || stmt->errorcode == 100))
-    return 0;
 
   pp_para(d, false, stmt, callback_nr);
 

@@ -778,6 +778,7 @@ Iterations: 1 (of 1)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 1403, ORA-01403: no data found (select str ,n  from example_tbl where n<:b0 order by n            )
 
+---------------------------------------------------------------------------
 ===========================================================================
 stmt # 25, type CLOSE (15), line 320, #para 0 (in 0) (offset 579)   (foff: 0)
 ---------------------------------------------------------------------------
@@ -942,49 +943,49 @@ SQL-Code: 1403, ORA-01403: no data found (select str ,n into :s1:s2 ,:s3:s4   fr
 Iterations: 6 (of 512)
   Iteration: 0
     OUT paramter (a=0)
-      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
-      Value: |NULL|
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |a|
     OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 36, Ind -1
-      Value: |NULL|
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
     IN paramter (a=2)
       Type: INT (3), Length: 4, Size: 4, Ind 0
       Value: |6|
   Iteration: 1
     OUT paramter (a=0)
-      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
-      Value: |NULL|
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |a|
     OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 36, Ind -1
-      Value: |NULL|
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
   Iteration: 2
     OUT paramter (a=0)
-      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
-      Value: |NULL|
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |a|
     OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 36, Ind -1
-      Value: |NULL|
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |0|
   Iteration: 3
     OUT paramter (a=0)
-      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
-      Value: |NULL|
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |b|
     OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 36, Ind -1
-      Value: |NULL|
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
   Iteration: 4
     OUT paramter (a=0)
-      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
-      Value: |NULL|
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |b|
     OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 36, Ind -1
-      Value: |NULL|
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
   Iteration: 5
     OUT paramter (a=0)
-      Type: STRING0 (5), Length: 32, Size: 36, Ind -1
-      Value: |NULL|
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |c|
     OUT paramter (a=1)
-      Type: INT (3), Length: 4, Size: 36, Ind -1
-      Value: |NULL|
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |4|
 ---------------------------------------------------------------------------
 ===========================================================================
 stmt # 28, type OPEN cursor (9), line 400, #para 1 (in 1) (offset 816)   (foff: 0)
@@ -1051,6 +1052,22 @@ Iterations: 1 (of 4)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 1403, ORA-01403: no data found (select str ,n  from example_tbl where n<:b0 order by n            )
 
+Iterations: 2 (of 4)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+  Iteration: 1
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |c|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |4|
+---------------------------------------------------------------------------
 ===========================================================================
 stmt # 28, type CLOSE (15), line 419, #para 0 (in 0) (offset 858)   (foff: 0)
 ---------------------------------------------------------------------------
@@ -1185,6 +1202,15 @@ Iterations: 1 (of 4)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQL-Code: 1403, ORA-01403: no data found (SELECT str, n FROM example_tbl WHERE n < :x ORDER BY n)
 
+Iterations: 1 (of 4)
+  Iteration: 0
+    OUT paramter (a=0)
+      Type: STRING0 (5), Length: 32, Size: 36, Ind 0
+      Value: |b|
+    OUT paramter (a=1)
+      Type: INT (3), Length: 4, Size: 36, Ind 0
+      Value: |1|
+---------------------------------------------------------------------------
 ===========================================================================
 stmt # 31, type CLOSE (15), line 482, #para 0 (in 0) (offset 991)   (foff: 0)
 ---------------------------------------------------------------------------
