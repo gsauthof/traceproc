@@ -1600,6 +1600,9 @@ static int pp_sql_before(const sqlexd *d, Statement *stmt, unsigned callback_nr)
   if (stmt->type == FETCH && options.binary[OPT_SQL])
     return 0;
 
+  // only initialize - no pretty-printing
+  if (!options.binary[OPT_BEFORE])
+    return 0;
 
   if (state.callbacks[callback_nr].before_fn) {
     int ret = state.callbacks[callback_nr]
@@ -1717,9 +1720,8 @@ void sqlcxt (void **v, unsigned int * i,
 
     if (options.binary[OPT_FRAME])
       tprintf("Calling oracle sqlcxt() ...\n");
-    if (options.binary[OPT_BEFORE])
-      for (unsigned i = 0; i < state.callbacks_registered; ++i)
-        pp_sql_before(d, &stmt, i);
+    for (unsigned i = 0; i < state.callbacks_registered; ++i)
+      pp_sql_before(d, &stmt, i);
   }
 
   STATS_BEGIN(options.binary[OPT_STATS]);
