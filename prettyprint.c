@@ -182,7 +182,7 @@ int pp_sql(const Statement *stmt, void *user_ptr)
   tprintf("-- %s:%zu\n", stmt->filename, stmt->line_number);
 
   if (!stmt->text) {
-    if (stmt->type_str && *stmt->type_str == '0')
+    if (!stmt->type_str || *stmt->type_str == '0')
       tprintf("-- Unknown SQL statement type: %d\n", stmt->type);
     else
       tprintf("-- Pseudo-SQL: %s\n", stmt->type_str);
