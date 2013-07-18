@@ -1704,10 +1704,13 @@ static void setup_fns()
   r += setup__exit();
   r += setup__Exit();
   //r += setup_exit();
-  if (r) {
-    fprintf(stderr, "Exiting because of previous dlsym() errors.\n");
-    wrap_exit(23);
-  }
+
+  // do not exit because a non-oracle-linked fork'ed child also
+  // triggers this 'error'
+  //if (r) {
+  //  fprintf(stderr, "Exiting because of previous dlsym() errors.\n");
+  //  wrap_exit(23);
+  //}
 }
 
 // libclntsh.so

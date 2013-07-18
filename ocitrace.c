@@ -1565,10 +1565,12 @@ void ocitrace_setup(bool trace_intercept, bool trace_gory, bool trace_sql,
   r += setup_OCISessionPoolDestroy();
   r += setup_OCISessionRelease();
 
-  if (r) {
-    fprintf(stderr, "Exiting because of previous dlsym() errors.\n");
-    exit(23);
-  }
+  // do not exit because a non-oracle-linked fork'ed child also
+  // triggers this 'error'
+  //if (r) {
+  //  fprintf(stderr, "Exiting because of previous dlsym() errors.\n");
+  //  exit(23);
+  //}
   int ret = stats_init(&stats, 0, FN_SIZE);
   IFTRUEEXIT(ret, 0, -1);
 }
