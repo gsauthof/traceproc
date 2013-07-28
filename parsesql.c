@@ -37,6 +37,11 @@ struct SQL_Token {
 typedef struct SQL_Token SQL_Token;
 
 
+static is_hostvar_char(char c)
+{
+    return isalnum(c) || c == '_';
+}
+
 size_t sql_count_host_vars(const char *s)
 {
   size_t ret = 0;
@@ -49,7 +54,7 @@ size_t sql_count_host_vars(const char *s)
     if (!a || b<a) {
       ++ret;
       pos = b + 1;
-      for (; isalnum(*pos); ++pos)
+      for (; is_hostvar_char(*pos); ++pos)
         ;
       if (*pos == ':')
         ++pos;
@@ -97,7 +102,7 @@ int sql_tokenize(const char *s,
       }
       const char *str_pos = b+1;
       for (;;) {
-        for (; isalnum(*str_pos); ++str_pos)
+        for (; is_hostvar_char(*str_pos); ++str_pos)
           ;
         if (*str_pos != ':')
           break;

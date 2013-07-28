@@ -195,6 +195,39 @@ START_TEST(token_06)
 }
 END_TEST
 
+START_TEST(token_07)
+{
+  const char inp[] = "foo :xyz_id bar in :ab_id:ab_id_ind blah);";
+  SQL_Token *tokens = 0;
+  size_t size = 0;
+  int ret = sql_tokenize(inp, &tokens, &size);
+  ck_assert_int_eq(ret, 0);
+  ck_assert(size>3);
+  struct st {
+    const char *a;
+    bool b;
+  };
+  typedef struct st st;
+  const st src[] = {
+    { "foo ", false },
+    { ":xyz_id", true },
+    { " bar in ", false },
+    { ":ab_id:ab_id_ind", true },
+    { " blah);", false },
+    { 0, 0}
+  };
+  for (size_t i = 0; i<5; ++i) {
+    ck_assert(tokens[i].host_var == src[i].b);
+    char b[128] = {0};
+    strncpy(b, tokens[i].begin, tokens[i].end - tokens[i].begin);
+    ck_assert_str_eq(b, src[i].a);
+  }
+  ck_assert(!tokens[5].begin);
+  ck_assert(!tokens[5].end);
+  free(tokens);
+}
+END_TEST
+
 START_TEST(quote_01)
 {
   char out[32] = {0};
@@ -319,6 +352,7 @@ TCase *parsesql_tc_create()
   tcase_add_test(tc, token_04);
   tcase_add_test(tc, token_05);
   tcase_add_test(tc, token_06);
+  tcase_add_test(tc, token_07);
   tcase_add_test(tc, quote_01);
   tcase_add_test(tc, quote_02);
   tcase_add_test(tc, quote_03);
