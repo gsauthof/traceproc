@@ -1252,6 +1252,7 @@ enum Binary_Option {
   OPT_OCI,
   OPT_LEAK,
   OPT_IGN_EXIT,
+  OPT_IGN_ICODE,
   WRAP_OPTION_SIZE
 };
 typedef enum Binary_Option Binary_Option;
@@ -1269,7 +1270,8 @@ static const char *option_str[] = {
   "time",
   "oci",
   "leak",
-  "ign_exit"
+  "ign_exit",
+  "ignicode"
 };
 
 struct Options {
@@ -1731,6 +1733,13 @@ void sqlcxt (void **v, unsigned int * i,
 
   (*fn_table.sqlcxt)(v, i, d, p);
 
+  if (options.binary[OPT_IGN_ICODE]
+        && (stmt.type == INSERT || stmt.type == UPDATE) ) {
+      struct sqlca *s = (struct sqlca *) d->sqlest;
+      s->sqlcode = 0;
+      stmt.errorcode = 0;
+  }
+
   STATS_END(options.binary[OPT_STATS], FN_SQLCXT, stmt.type);
 
   if (options.binary[OPT_INTERCEPT]) {
@@ -1832,6 +1841,8 @@ static void help()
       "  -frame       - print 'starting sqlctx()/done' msg (default: no)\n"
       "  -time        - print timestamps (default: yes)\n"
       "  -ign_exit    - map _exit()/_Exit() to exit() (default: no)\n"
+      "  -ignicode    - overwrite SQL error codes of Pro*C INSERT/UPDATE\n"
+      "                 SQL statements with 'success' (0) (default: no)\n"
       "\n"
       "\n"
       "You can prefix each binary option with -no, e.g. -nostats,\n"

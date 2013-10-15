@@ -206,6 +206,11 @@ The unittests need [libcheck][check].
 
 ## Advanced features
 
+- with the option `-ignicode` libtraceproc unconditionally manipulates
+  the SQL error codes of Pro*C INSERT/UPDATE SQL statements to 0 (success).
+  That means that insert/update errors are ignored because the client
+  program sees all inserts/updates (in Pro*C code) as successful. This can
+  be handy for testing programs using a read-only DB session.
 - one can set a (conditional) breakpoint on `traceproc_trap()` which
   demultiplexes all traced calls
 - libtraceproc_dummy.so can be normally linked to a project for
