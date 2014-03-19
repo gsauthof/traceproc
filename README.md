@@ -143,7 +143,7 @@ The sub-directory `example` contains some small example programs
 for testing the tracing features of libtraceproc, all compilable
 via the makefile.
 
-But be careful, it also contains 3 example programs that trigger
+But be careful, it also contains 4 example programs that trigger
 Pro*C bugs - under `example/bug`.
 
 ## Compile

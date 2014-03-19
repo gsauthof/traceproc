@@ -1,0 +1,25 @@
+/* 2014-03-19, Georg Sauthoff
+
+   Minimal test case triggering an memory leaking infinitve loop in Pro*C.
+
+   Expected behavior:
+   Pro*C should process the file without any errors.
+
+   Actual behavior:
+   Pro*C goes into an infinite loop allocating large amounts of memory until it
+   is killed by the system.
+
+   Affected systems:
+   - Fedora 19, Pro*C/C++: Release 11.2.0.4.0 (instant client)
+
+   Unaffected systems:
+   - Solaris 10, Pro*C/C++: Release 11.2.0.3.0
+
+   How to reproduce:
+
+       $ instantclient_11_2/sdk/proc code=ANSI_C iname=limits.pc oname=limits.c
+
+   */
+
+
+#include <limits.h>
